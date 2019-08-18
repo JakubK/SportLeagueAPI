@@ -45,6 +45,9 @@ TestResult.xml
 [Rr]eleasePS/
 dlldata.c
 
+appsettings.json
+Database.db
+
 # Benchmark Results
 BenchmarkDotNet.Artifacts/
 
