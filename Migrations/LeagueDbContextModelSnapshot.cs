@@ -45,9 +45,27 @@ namespace SportLeagueAPI.Migrations
                     b.Property<string>("Url")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<int?>("EventId");
+
+                    b.Property<int>("OwnerId");
+
                     b.HasKey("Url");
 
+                    b.HasIndex("EventId");
+
                     b.ToTable("Medias");
+
+                    b.HasData(
+                        new
+                        {
+                            Url = "https://google.com",
+                            OwnerId = 1
+                        },
+                        new
+                        {
+                            Url = "https://wp.pl",
+                            OwnerId = 1
+                        });
                 });
 
             modelBuilder.Entity("SportLeagueAPI.Models.News", b =>
@@ -65,6 +83,8 @@ namespace SportLeagueAPI.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("MediaUrl");
+
                     b.ToTable("Newses");
                 });
 
@@ -73,11 +93,13 @@ namespace SportLeagueAPI.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("ImageUrl");
+                    b.Property<string>("MediaUrl");
 
                     b.Property<string>("Name");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("MediaUrl");
 
                     b.ToTable("Players");
                 });
@@ -89,11 +111,41 @@ namespace SportLeagueAPI.Migrations
 
                     b.Property<string>("Description");
 
-                    b.Property<string>("ImageUrl");
+                    b.Property<string>("MediaUrl");
 
                     b.HasKey("Name");
 
+                    b.HasIndex("MediaUrl");
+
                     b.ToTable("Settlements");
+                });
+
+            modelBuilder.Entity("SportLeagueAPI.Models.Media", b =>
+                {
+                    b.HasOne("SportLeagueAPI.Models.Event")
+                        .WithMany("Medias")
+                        .HasForeignKey("EventId");
+                });
+
+            modelBuilder.Entity("SportLeagueAPI.Models.News", b =>
+                {
+                    b.HasOne("SportLeagueAPI.Models.Media", "Media")
+                        .WithMany()
+                        .HasForeignKey("MediaUrl");
+                });
+
+            modelBuilder.Entity("SportLeagueAPI.Models.Player", b =>
+                {
+                    b.HasOne("SportLeagueAPI.Models.Media", "Media")
+                        .WithMany()
+                        .HasForeignKey("MediaUrl");
+                });
+
+            modelBuilder.Entity("SportLeagueAPI.Models.Settlement", b =>
+                {
+                    b.HasOne("SportLeagueAPI.Models.Media", "Media")
+                        .WithMany()
+                        .HasForeignKey("MediaUrl");
                 });
 #pragma warning restore 612, 618
         }
