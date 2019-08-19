@@ -29,6 +29,7 @@ namespace SportLeagueAPI
         {
             services.AddControllers();
             services.AddDbContext<LeagueDbContext>(options => options.UseSqlite(Configuration.GetConnectionString("Database")));
+            services.AddScoped<EventRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
