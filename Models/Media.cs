@@ -6,5 +6,6 @@ namespace SportLeagueAPI.Models
     {
         [Key]
         public string Url {get;set;}
+        public int OwnerId {get;set;}
     }
 }

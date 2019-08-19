@@ -8,6 +8,7 @@ namespace SportLeagueAPI.GraphQL.Types
         public MediaType()
         {
             Field(x => x.Url);
+            Field(x => x.OwnerId);
         }
     }
 }
