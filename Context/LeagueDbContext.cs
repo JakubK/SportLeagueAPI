@@ -20,8 +20,8 @@ namespace SportLeagueAPI.Context
 
             //Medias
             modelBuilder.Entity<Media>().HasData(
-                new Media{ Url="https://google.com", OwnerId=1 },
-                new Media{ Url="https://wp.pl", OwnerId=1 }
+                new Media{ Id=1, Url="https://google.com", OwnerId=1 },
+                new Media{ Id=2, Url="https://wp.pl", OwnerId=1 }
             );
         }
     }
