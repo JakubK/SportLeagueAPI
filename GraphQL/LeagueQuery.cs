@@ -10,7 +10,7 @@ namespace SportLeagueAPI.GraphQL
     {
         public LeagueQuery(EventRepository eventRepository)
         {
-            Field<ListGraphType<EventType>>("events", resolve: context => eventRepository.GetAll());
+            Field<ListGraphType<EventGraphType>>("events", resolve: context => eventRepository.GetAll());
         }
     }
 }

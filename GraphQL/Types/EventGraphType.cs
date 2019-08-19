@@ -4,15 +4,15 @@ using SportLeagueAPI.Repositories;
 
 namespace SportLeagueAPI.GraphQL.Types
 {
-    public class EventType : ObjectGraphType<Event>
+    public class EventGraphType : ObjectGraphType<Event>
     {
-        public EventType(MediaRepository mediaRepository)
+        public EventGraphType(MediaRepository mediaRepository)
         {
             Field(x => x.Id);
             Field(x => x.Name);
             Field(x => x.Description);
             Field(x => x.Date);
-            Field<ListGraphType<MediaType>>("medias", 
+            Field<ListGraphType<MediaGraphType>>("medias", 
             resolve: context => 
             {
                 return mediaRepository.GetMultipleByOwnerId(context.Source.Id);

@@ -3,14 +3,12 @@ using SportLeagueAPI.Models;
 
 namespace SportLeagueAPI.GraphQL.Types
 {
-    public class NewsType : ObjectGraphType<News>
+    public class SettlementGraphType : ObjectGraphType<Settlement>
     {
-        public NewsType()
+        public SettlementGraphType()
         {
-            Field(x => x.Id);
             Field(x => x.Name);
             Field(x => x.Description);
-            Field(x => x.Date);
         }
     }
 }

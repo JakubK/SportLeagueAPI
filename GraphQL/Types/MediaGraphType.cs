@@ -3,9 +3,9 @@ using SportLeagueAPI.Models;
 
 namespace SportLeagueAPI.GraphQL.Types
 {
-    public class MediaType : ObjectGraphType<Media>
+    public class MediaGraphType : ObjectGraphType<Media>
     {
-        public MediaType()
+        public MediaGraphType()
         {
             Field(x => x.Url);
             Field(x => x.OwnerId);

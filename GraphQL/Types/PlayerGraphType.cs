@@ -3,9 +3,9 @@ using SportLeagueAPI.Models;
 
 namespace SportLeagueAPI.GraphQL.Types
 {
-    public class PlayerType : ObjectGraphType<Player>
+    public class PlayerGraphType : ObjectGraphType<Player>
     {
-        public PlayerType()
+        public PlayerGraphType()
         {
             Field(x => x.Id);
             Field(x => x.Name);
