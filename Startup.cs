@@ -43,7 +43,10 @@ namespace SportLeagueAPI
 
             services.AddScoped<IDependencyResolver>(s => new FuncDependencyResolver(s.GetRequiredService));
             services.AddScoped<LeagueSchema>();
+
             services.AddScoped<EventRepository>();
+            services.AddScoped<MediaRepository>();
+
             services.AddGraphQL(x => 
             {
                 x.ExposeExceptions = false;
