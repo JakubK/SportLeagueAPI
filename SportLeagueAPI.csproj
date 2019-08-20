@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="GraphQL" Version="2.4.0" />
+    <PackageReference Include="GraphQL.EntityFramework" Version="7.1.0" />
     <PackageReference Include="GraphQL.Server.Transports.AspNetCore" Version="3.4.0" />
     <PackageReference Include="GraphQL.Server.UI.Playground" Version="3.4.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.2.6" />
