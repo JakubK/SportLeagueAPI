@@ -13,5 +13,10 @@ namespace SportLeagueAPI.Models
         public string Name {get;set;}
         public string Description {get;set;}
         public DateTime Date {get;set;}
+
+        public ICollection<Media> Medias {get;set;}
+
+        public int? SettlementId {get;set;}
+        public Settlement Settlement {get;set;}
     }
 }
