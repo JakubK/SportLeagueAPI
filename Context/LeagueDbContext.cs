@@ -15,14 +15,18 @@ namespace SportLeagueAPI.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            //Medias
+            modelBuilder.Entity<Media>().HasData(
+                new Media{ Id=1, Url="https://google.com" },
+                new Media{ Id=2, Url="https://wp.pl" }
+            );
+
+            //Settlement
+            modelBuilder.Entity<Settlement>().HasData(new Settlement{ Id= 1, Name = "Cool Settlement"});
             //Events
             modelBuilder.Entity<Event>().HasData(new Event{ Id= 1, Name = "Cool Event"});
 
-            //Medias
-            modelBuilder.Entity<Media>().HasData(
-                new Media{ Id=1, Url="https://google.com", OwnerId=1 },
-                new Media{ Id=2, Url="https://wp.pl", OwnerId=1 }
-            );
+            
         }
     }
 }
