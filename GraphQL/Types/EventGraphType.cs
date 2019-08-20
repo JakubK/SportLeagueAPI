@@ -12,11 +12,6 @@ namespace SportLeagueAPI.GraphQL.Types
             Field(x => x.Name);
             Field(x => x.Description);
             Field(x => x.Date);
-            Field<ListGraphType<MediaGraphType>>("medias", 
-            resolve: context => 
-            {
-                return mediaRepository.GetMultipleByOwnerId(context.Source.Id);
-            });
         }
     }
 }
