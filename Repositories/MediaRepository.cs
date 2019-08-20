@@ -12,9 +12,5 @@ namespace SportLeagueAPI.Repositories
         {
             ctx = context;
         }
-        public IQueryable<Media> GetMultipleByOwnerId(int id)
-        {
-            return ctx.Medias.Where(x => x.OwnerId == id);
-        }
     }
 }
