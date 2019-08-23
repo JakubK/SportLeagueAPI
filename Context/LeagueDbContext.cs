@@ -12,6 +12,7 @@ namespace SportLeagueAPI.Context
         public DbSet<Settlement> Settlements {get;set;}
         public DbSet<Event> Events {get;set;}
         public DbSet<Media> Medias {get;set;}
+        public DbSet<Score> Scores {get;set;}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
