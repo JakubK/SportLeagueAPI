@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace SportLeagueAPI.Models
+namespace SportLeagueAPI.DTO
 {
     public class Media
     {
@@ -11,9 +11,7 @@ namespace SportLeagueAPI.Models
         public int Id {get;set;}
         public string Url {get;set;}
 
+        public int? EventId {get;set;}
         public Event Event {get;set;}
-        public News News {get;set;}
-        public Player Player {get;set;}
-        public Settlement Settlement {get;set;}
     }
 }

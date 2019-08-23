@@ -3,7 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SportLeagueAPI.Context;
-using SportLeagueAPI.Models;
+using SportLeagueAPI.DTO;
 
 namespace SportLeagueAPI.Repositories
 {
