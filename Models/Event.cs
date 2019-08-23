@@ -18,5 +18,7 @@ namespace SportLeagueAPI.Models
 
         public int? SettlementId {get;set;}
         public Settlement Settlement {get;set;}
+
+        public ICollection<Score> Scores {get;set;}
     }
 }
