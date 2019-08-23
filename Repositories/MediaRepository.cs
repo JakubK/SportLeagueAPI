@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using SportLeagueAPI.Context;
-using SportLeagueAPI.Models;
+using SportLeagueAPI.DTO;
 
 namespace SportLeagueAPI.Repositories
 {

@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using SportLeagueAPI.Models;
+using SportLeagueAPI.DTO;
 
 namespace SportLeagueAPI.Context
 {

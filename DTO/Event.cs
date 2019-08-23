@@ -1,10 +1,11 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace SportLeagueAPI.Models
+namespace SportLeagueAPI.DTO
 {
-    public class News
+    public class Event
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -13,7 +14,11 @@ namespace SportLeagueAPI.Models
         public string Description {get;set;}
         public DateTime Date {get;set;}
 
-        public int? MediaId {get;set;}
-        public Media Media {get;set;}
+        public ICollection<Media> Medias {get;set;}
+
+        public int? SettlementId {get;set;}
+        public Settlement Settlement {get;set;}
+
+        public ICollection<Score> Scores {get;set;}
     }
 }
