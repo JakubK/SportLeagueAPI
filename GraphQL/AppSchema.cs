@@ -10,6 +10,7 @@ namespace SportLeagueAPI.GraphQL
             var schema = SchemaBuilder.FromObject<LeagueDbContext>();
 
             schema.AddMutationFrom(new EventMutations());
+            schema.AddMutationFrom(new NewsMutations());
 
             return schema;
         }
