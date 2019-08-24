@@ -13,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using SportLeagueAPI.Context;
+using SportLeagueAPI.GraphQL;
 using SportLeagueAPI.Repositories;
 
 namespace SportLeagueAPI
@@ -30,7 +31,7 @@ namespace SportLeagueAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<LeagueDbContext>(options => options.UseSqlite(Configuration.GetConnectionString("Database")));
-            services.AddSingleton(SchemaBuilder.FromObject<LeagueDbContext>());
+            services.AddSingleton(AppSchema.MakeSchema());
             services.AddMvc();
         }
 
