@@ -11,6 +11,7 @@ namespace SportLeagueAPI.GraphQL
 
             schema.AddMutationFrom(new EventMutations());
             schema.AddMutationFrom(new NewsMutations());
+            schema.AddMutationFrom(new SettlementMutations());
 
             return schema;
         }
