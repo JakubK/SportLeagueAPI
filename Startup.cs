@@ -33,8 +33,12 @@ namespace SportLeagueAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddHttpContextAccessor();
             services.AddDbContext<LeagueDbContext>(options => options.UseSqlite(Configuration.GetConnectionString("Database")));
+
             services.AddTransient<IPathsProvider,PathsProvider>();
+            services.AddTransient<IMediaUploader,MediaUploader>();
+
             services.AddSingleton(AppSchema.MakeSchema());
             services.AddMvc();
         }
