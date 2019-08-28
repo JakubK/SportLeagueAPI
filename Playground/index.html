@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <input id="fi" type="file"/>
+  <button onclick="Send()">Send</button>
+</head>
+<body>
+  <script>
+    function Send()
+    {
+      let formData = new FormData();
+      let map = {
+        file : null
+      };
+
+      //formData.append("operations",'{ "query": "mutation ($file: Upload!) { singleUpload(file: $file) { id } }", "variables": { "file": null } }');
+      formData.append("operations",'{ "query": "mutation addPlayer($file: Upload!) { addPlayer(file: $file) { id } }", "variables": { "file": null } }');
+      formData.append("map", "{ \"0\": [\"variables.file\"] }");
+      formData.append("0", document.getElementById('fi').files[0]);
+
+      fetch("http://localhost:5000/graphql",{
+        method: 'post',
+        body: formData
+      })
+    }
+  </script>
+</body>
+</html>
