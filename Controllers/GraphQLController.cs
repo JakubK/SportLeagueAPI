@@ -5,7 +5,9 @@ using System.Net;
 using EntityGraphQL;
 using EntityGraphQL.Schema;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using SportLeagueAPI.Context;
+using SportLeagueAPI.Models;
 
 namespace SportLeagueAPI.Controllers
 {
@@ -22,16 +24,10 @@ namespace SportLeagueAPI.Controllers
             this._schemaProvider = schemaProvider;
         }
 
-        [HttpGet]
-        public object Get(string query)
-        {
-            return RunDataQuery(new QueryRequest { Query = query });
-        }
-
         [HttpPost]
         public IActionResult Post([FromBody]QueryRequest query)
         {
-            return Ok(RunDataQuery(query));            
+            return Ok(RunDataQuery(query));
         }
 
         private object RunDataQuery(QueryRequest query)
