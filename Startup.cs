@@ -16,6 +16,7 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using SportLeagueAPI.Context;
 using SportLeagueAPI.GraphQL;
+using SportLeagueAPI.Middleware;
 using SportLeagueAPI.Repositories;
 using SportLeagueAPI.Services;
 
@@ -33,6 +34,12 @@ namespace SportLeagueAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(o => o.AddPolicy("EnableCors", builder =>
+            {
+                builder.AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader();
+            }));
             services.AddHttpContextAccessor();
             services.AddDbContext<LeagueDbContext>(options => options.UseSqlite(Configuration.GetConnectionString("Database")));
 
@@ -46,6 +53,7 @@ namespace SportLeagueAPI
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, IPathsProvider pathsProvider)
         {
+            app.UseCors("EnableCors");
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -55,7 +63,7 @@ namespace SportLeagueAPI
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-
+            app.UseMiddleware<GraphQLUploadMiddleware>();
             app.UseStaticFiles(new StaticFileOptions()
             {
                 FileProvider = new PhysicalFileProvider(pathsProvider.MediaPath),
