@@ -18,7 +18,7 @@
       };
 
       //formData.append("operations",'{ "query": "mutation ($file: Upload!) { singleUpload(file: $file) { id } }", "variables": { "file": null } }');
-      formData.append("operations",'{ "query": "mutation addPlayer($file: Upload!) { addPlayer(file: $file) { id } }", "variables": { "file": null } }');
+      formData.append("operations",'{ "query": "mutation addPlayer($name: String!, $link: String!) { addPlayer(name: $name, link: $link) { id } }", "variables": { "name" : "Jan" }}');
       formData.append("map", "{ \"0\": [\"variables.file\"] }");
       formData.append("0", document.getElementById('fi').files[0]);
 
