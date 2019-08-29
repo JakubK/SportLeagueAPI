@@ -6,6 +6,6 @@ namespace SportLeagueAPI.Models
     public class AddPlayer
     {
         public string Name {get;set;}
-        public IFormFile File {get;set;}
+        public string Link {get;set;}
     }
 }
