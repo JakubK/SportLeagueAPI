@@ -13,7 +13,7 @@ namespace SportLeagueAPI.GraphQL
     {
 
         [GraphQLMutation]
-        public Expression<Func<LeagueDbContext,Player>> AddPlayer(LeagueDbContext context, AddPlayer args)
+        public Expression<Func<LeagueDbContext,Player>> AddPlayer(LeagueDbContext context, CreatePlayer args)
         {
             var newPlayer = new Player();
             newPlayer.Name = args.Name;

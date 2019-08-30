@@ -1,11 +1,9 @@
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-
 namespace SportLeagueAPI.Models
 {
-    public class AddPlayer
+    public class CreateSettlement
     {
         public string Name {get;set;}
+        public string Description {get;set;}
         public string Link {get;set;}
     }
 }
