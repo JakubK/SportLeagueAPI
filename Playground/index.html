@@ -14,7 +14,6 @@
     {
       let formData = new FormData();
 
-      //formData.append("operations",'{ "query": "mutation ($file: Upload!) { singleUpload(file: $file) { id } }", "variables": { "file": null } }');
       formData.append("graphql",'{ "query": "mutation addPlayer($name: String!, $link: String!) { addPlayer(name: $name, link: $link) { id } }", "variables": { "name" : "Jan" }}');
       formData.append("0", document.getElementById('fi').files[0]);
 

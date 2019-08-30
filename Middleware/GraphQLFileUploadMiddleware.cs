@@ -11,13 +11,13 @@ using SportLeagueAPI.Services;
 
 namespace SportLeagueAPI.Middleware
 {
-    public class FileUploadMiddleware
+    public class GraphQLFileUploadMiddleware
     {
         private readonly RequestDelegate _next;
         private LeagueDbContext _dbContext;
         private MappedSchemaProvider<LeagueDbContext> _schemaProvider;
 
-        public FileUploadMiddleware(RequestDelegate next)
+        public GraphQLFileUploadMiddleware(RequestDelegate next)
         {
             _next = next;
         }
