@@ -13,13 +13,9 @@
     function Send()
     {
       let formData = new FormData();
-      let map = {
-        file : null
-      };
 
       //formData.append("operations",'{ "query": "mutation ($file: Upload!) { singleUpload(file: $file) { id } }", "variables": { "file": null } }');
-      formData.append("operations",'{ "query": "mutation addPlayer($name: String!, $link: String!) { addPlayer(name: $name, link: $link) { id } }", "variables": { "name" : "Jan" }}');
-      formData.append("map", "{ \"0\": [\"variables.file\"] }");
+      formData.append("graphql",'{ "query": "mutation addPlayer($name: String!, $link: String!) { addPlayer(name: $name, link: $link) { id } }", "variables": { "name" : "Jan" }}');
       formData.append("0", document.getElementById('fi').files[0]);
 
       fetch("http://localhost:5000/graphql",{

@@ -44,7 +44,7 @@ namespace SportLeagueAPI.Middleware
 
             //extract graphql with variables
             var forms = await context.Request.ReadFormAsync();            
-            forms.TryGetValue("operations", out var operationsJson);
+            forms.TryGetValue("graphql", out var operationsJson);
 
             QueryRequest request = JsonConvert.DeserializeObject<QueryRequest>(operationsJson);
 
