@@ -19,6 +19,9 @@ namespace SportLeagueAPI.GraphQL
             newEvent.Date = args.Date;
             newEvent.Description = args.Description;
 
+            var medias = context.Medias.Where(x => args.Links.Contains(x.Url));
+            newEvent.Medias = medias.ToArray();
+
             context.Events.Add(newEvent);
             context.SaveChanges();
 
