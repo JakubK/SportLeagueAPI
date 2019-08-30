@@ -13,13 +13,12 @@ namespace SportLeagueAPI.GraphQL
     {
 
         [GraphQLMutation]
-        public Expression<Func<LeagueDbContext,Player>> AddPlayer(LeagueDbContext context, AddPlayer args)
+        public Expression<Func<LeagueDbContext,Player>> AddPlayer(LeagueDbContext context, CreatePlayer args)
         {
             var newPlayer = new Player();
             newPlayer.Name = args.Name;
 
-            var media = context.Medias.FirstOrDefault(x => x.Url == args.Link);
-            newPlayer.MediaId = media.Id;
+            newPlayer.MediaId = context.Medias.FirstOrDefault(x => x.Url == args.Link).Id;
 
             context.Players.Add(newPlayer);
             context.SaveChanges();

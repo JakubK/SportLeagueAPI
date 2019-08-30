@@ -19,6 +19,8 @@ namespace SportLeagueAPI.GraphQL
             newNews.Date = args.Date;
             newNews.Description = args.Description;
 
+            newNews.MediaId = context.Medias.FirstOrDefault(x => x.Url == args.Link).Id;
+
             context.Newses.Add(newNews);
             context.SaveChanges();
 

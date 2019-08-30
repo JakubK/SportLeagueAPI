@@ -11,12 +11,14 @@ namespace SportLeagueAPI.GraphQL
     public class SettlementMutations
     {
         [GraphQLMutation]
-        public Expression<Func<LeagueDbContext, Settlement>> AddSettlement(LeagueDbContext context, AddSettlement args)
+        public Expression<Func<LeagueDbContext, Settlement>> AddSettlement(LeagueDbContext context, CreateSettlement args)
         {
             var newSettlement = new Settlement();
 
             newSettlement.Name = args.Name;
             newSettlement.Description = args.Description;
+
+            newSettlement.MediaId = context.Medias.FirstOrDefault(x => x.Url == args.Link).Id;
             
             context.Settlements.Add(newSettlement);
             context.SaveChanges();
