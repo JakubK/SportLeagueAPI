@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using SportLeagueAPI.Context;
+using SportLeagueAPI.DTO;
 using SportLeagueAPI.Services;
 
 namespace SportLeagueAPI.Middleware
@@ -15,15 +16,13 @@ namespace SportLeagueAPI.Middleware
         private readonly RequestDelegate _next;
         private LeagueDbContext _dbContext;
         private MappedSchemaProvider<LeagueDbContext> _schemaProvider;
-        IMediaUploader _mediaUploader;
 
-        public FileUploadMiddleware(RequestDelegate next, IMediaUploader mediaUploader)
+        public FileUploadMiddleware(RequestDelegate next)
         {
             _next = next;
-            _mediaUploader = mediaUploader;
         }
 
-        public async Task InvokeAsync(HttpContext context)
+        public async Task InvokeAsync(HttpContext context, IMediaUploader _mediaUploader)
         {
             if(!context.Request.HasFormContentType)
             {
@@ -37,41 +36,27 @@ namespace SportLeagueAPI.Middleware
             var links = new List<string>();
             foreach(var file in files)
             {
-                links.Add(_mediaUploader.UploadMedia(file));
+                links.Add(await _mediaUploader.UploadMediaAsync(file));
             }
             
-            if(_dbContext == null)
-            {
-                _dbContext = context.RequestServices.GetRequiredService<LeagueDbContext>();
-                _schemaProvider = context.RequestServices.GetRequiredService<MappedSchemaProvider<LeagueDbContext>>();
-            }
-            var forms = await context.Request.ReadFormAsync();
+            _dbContext = context.RequestServices.GetRequiredService<LeagueDbContext>();
+            _schemaProvider = context.RequestServices.GetRequiredService<MappedSchemaProvider<LeagueDbContext>>();
 
-            QueryRequest request = new QueryRequest();
-            
+            //extract graphql with variables
+            var forms = await context.Request.ReadFormAsync();            
             forms.TryGetValue("operations", out var operationsJson);
-            request = JsonConvert.DeserializeObject<QueryRequest>(operationsJson);
 
-            if(request.Variables == null)
-            {
-                request.Variables = new QueryVariables();
-            }
+            QueryRequest request = JsonConvert.DeserializeObject<QueryRequest>(operationsJson);
 
             if(links.Count == 1)
-            {
                 request.Variables.Add("link", links[0]);
-            }
             else if(links.Count > 1)
-            {
                 request.Variables.Add("link", links.ToArray());                
-            }
-
+            
             var data = _dbContext.QueryObject(request, _schemaProvider);
             if(data.Errors != null && data.Errors.Count > 0)
-            {
                 foreach(var error in data.Errors)
                     System.Console.Error.WriteLine(error.Message);
-            }
         }
     }
 }

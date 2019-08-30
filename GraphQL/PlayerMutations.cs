@@ -18,7 +18,7 @@ namespace SportLeagueAPI.GraphQL
             var newPlayer = new Player();
             newPlayer.Name = args.Name;
 
-            var media = context.Medias.First(x => x.Url == args.Link);
+            var media = context.Medias.FirstOrDefault(x => x.Url == args.Link);
             newPlayer.MediaId = media.Id;
 
             context.Players.Add(newPlayer);
