@@ -5,17 +5,21 @@ using EntityGraphQL.Schema;
 using SportLeagueAPI.Context;
 using SportLeagueAPI.DTO;
 using SportLeagueAPI.Models;
+using SportLeagueAPI.Services;
 
 namespace SportLeagueAPI.GraphQL
 {
     public class PlayerMutations
     {
+
         [GraphQLMutation]
         public Expression<Func<LeagueDbContext,Player>> AddPlayer(LeagueDbContext context, AddPlayer args)
         {
             var newPlayer = new Player();
             newPlayer.Name = args.Name;
-            newPlayer.Settlement = context.Settlements.First(x => x.Name == args.SettlementName);
+
+            var media = context.Medias.FirstOrDefault(x => x.Url == args.Link);
+            newPlayer.MediaId = media.Id;
 
             context.Players.Add(newPlayer);
             context.SaveChanges();

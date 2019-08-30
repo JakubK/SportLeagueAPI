@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <input id="fi" type="file"/>
+  <button onclick="Send()">Send</button>
+</head>
+<body>
+  <script>
+    function Send()
+    {
+      let formData = new FormData();
+
+      formData.append("graphql",'{ "query": "mutation addPlayer($name: String!, $link: String!) { addPlayer(name: $name, link: $link) { id } }", "variables": { "name" : "Jan" }}');
+      formData.append("0", document.getElementById('fi').files[0]);
+
+      fetch("http://localhost:5000/graphql",{
+        method: 'post',
+        body: formData
+      })
+    }
+  </script>
+</body>
+</html>
