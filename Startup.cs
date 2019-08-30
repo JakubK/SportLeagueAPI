@@ -43,6 +43,7 @@ namespace SportLeagueAPI
             services.AddHttpContextAccessor();
             services.AddDbContext<LeagueDbContext>(options => options.UseSqlite(Configuration.GetConnectionString("Database")));
 
+            services.AddTransient<IHasher,FileNameHasher>();
             services.AddTransient<IPathsProvider,PathsProvider>();
             services.AddTransient<IMediaUploader,MediaUploader>();
 
