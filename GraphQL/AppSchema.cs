@@ -2,6 +2,7 @@ using System.Linq;
 using EntityGraphQL.Schema;
 using SportLeagueAPI.Context;
 using SportLeagueAPI.DTO;
+using SportLeagueAPI.Models;
 
 namespace SportLeagueAPI.GraphQL
 {
@@ -11,10 +12,16 @@ namespace SportLeagueAPI.GraphQL
         {
             var schema = SchemaBuilder.FromObject<LeagueDbContext>();
 
+            schema.AddType(typeof(JsonWebToken),"jsonWebToken","Token");
+
+       
+            schema.AddMutationFrom(new AuthMutations());
+
             schema.AddMutationFrom(new EventMutations());
             schema.AddMutationFrom(new NewsMutations());
             schema.AddMutationFrom(new SettlementMutations());
             schema.AddMutationFrom(new PlayerMutations());
+
 
             //points fields
             schema.Type<Settlement>().AddField("points", ctx => ctx.Players.Sum(x => x.Scores.Sum(y => y.Value)),"Total points of Settlement");
