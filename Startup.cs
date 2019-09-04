@@ -40,6 +40,14 @@ namespace SportLeagueAPI
                     .AllowAnyMethod()
                     .AllowAnyHeader();
             }));
+
+            var jwtSection = Configuration.GetSection("Jwt");
+            var jwtOptions = new JwtOptions();
+            jwtSection.Bind(jwtOptions);
+            services.Configure<JwtOptions>(jwtSection);
+
+            services.AddTransient<IJwtHandler,JwtHandler>();
+            services.AddTransient<IAuthService,AuthService>();
             services.AddHttpContextAccessor();
             services.AddDbContext<LeagueDbContext>(options => options.UseSqlite(Configuration.GetConnectionString("Database")));
 
