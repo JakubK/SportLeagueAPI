@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using SportLeagueAPI.Context;
 using SportLeagueAPI.Models;
+using SportLeagueAPI.Services;
 
 namespace SportLeagueAPI.Controllers
 {
@@ -18,10 +19,14 @@ namespace SportLeagueAPI.Controllers
         private readonly LeagueDbContext _dbContext;
         private readonly MappedSchemaProvider<LeagueDbContext> _schemaProvider;
 
-        public GraphQLController(LeagueDbContext dbContext, MappedSchemaProvider<LeagueDbContext> schemaProvider)
+        private IPathsProvider _authService;
+
+        public GraphQLController(LeagueDbContext dbContext, MappedSchemaProvider<LeagueDbContext> schemaProvider, IPathsProvider authService)
         {
             this._dbContext = dbContext;
             this._schemaProvider = schemaProvider;
+            
+            this._authService = authService;
         }
 
         [HttpPost]
@@ -34,7 +39,7 @@ namespace SportLeagueAPI.Controllers
         {
             try
             {
-                var data = _dbContext.QueryObject(query, _schemaProvider);
+                var data = _dbContext.QueryObject(query, _schemaProvider, _authService);
                 return data;
             }
             catch (Exception)
