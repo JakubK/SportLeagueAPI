@@ -16,6 +16,5 @@ namespace SportLeagueAPI.DTO
 
         public Media Media {get;set;}
         public ICollection<Player> Players {get;set;}
-        public ICollection<Event> Events {get;set;}
     }
 }
