@@ -37,7 +37,7 @@ namespace SportLeagueAPI.GraphQL
         }
 
         [GraphQLMutation]
-        public Expression<Func<LeagueDbContext,Event>> DeleteEvent(LeagueDbContext context, DeleteEvent args)
+        public Expression<Func<LeagueDbContext,Event>> DeleteEvent(LeagueDbContext context, DeleteItem args)
         {
             var eventToRemove = context.Events.Include(x => x.Scores).Include(x => x.Medias).Where(x => x.Id == args.Id).First();
             context.Remove(eventToRemove);
@@ -45,6 +45,7 @@ namespace SportLeagueAPI.GraphQL
             return ctx => eventToRemove;
         }
 
+        [GraphQLMutation]
         public Expression<Func<LeagueDbContext,Event>> UpdateEvent(LeagueDbContext context, UpdateEvent args)
         {
             var eventToUpdate = context.Events.Include(x => x.Medias).First(x => x.Id == args.Id);
@@ -80,7 +81,7 @@ namespace SportLeagueAPI.GraphQL
                     Value = score.Value
                 });
             }
-            
+
             context.Events.Update(eventToUpdate);
             context.SaveChanges();
 
