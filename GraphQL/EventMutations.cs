@@ -25,7 +25,7 @@ namespace SportLeagueAPI.GraphQL
             context.Events.Add(newEvent);
             context.SaveChanges();
 
-            return ctx => context.Events.First(x => x.Id == newEvent.Id);
+            return ctx => newEvent;
         }
 
         [GraphQLMutation]
@@ -35,6 +35,34 @@ namespace SportLeagueAPI.GraphQL
             context.Remove(eventToRemove);
             context.SaveChanges();
             return ctx => eventToRemove;
+        }
+
+        public Expression<Func<LeagueDbContext,Event>> UpdateEvent(LeagueDbContext context, UpdateEvent args)
+        {
+            var eventToUpdate = context.Events.Include(x => x.Medias).First(x => x.Id == args.Id);
+
+            if(!string.IsNullOrWhiteSpace(args.Name))
+                eventToUpdate.Name = args.Name;
+
+            if(!string.IsNullOrWhiteSpace(args.Description))
+                eventToUpdate.Description = args.Description;
+
+            if(args.Date != null)
+                eventToUpdate.Date = args.Date;
+            
+            if(args.Links.Length != 0)
+            {
+                //delete old ones and add new ones
+                foreach(var media in eventToUpdate.Medias)
+                    context.Remove(media);
+
+                eventToUpdate.Medias = context.Medias.Where(x => args.Links.Contains(x.Url)).ToArray();
+            }
+
+            context.Events.Update(eventToUpdate);
+            context.SaveChanges();
+
+            return ctx => eventToUpdate;
         }
     }
 }
