@@ -25,5 +25,35 @@ namespace SportLeagueAPI.GraphQL
 
             return ctx => context.Players.First(x => x.Id == newPlayer.Id);
         }
+        
+        [GraphQLMutation]
+        public Expression<Func<LeagueDbContext, Player>> DeletePlayer(LeagueDbContext context,DeleteItem args)
+        {
+            var playerToRemove = context.Players.First(x => x.Id == args.Id);
+            context.Remove(playerToRemove);
+            context.SaveChanges();
+            return ctx => playerToRemove;
+        }
+
+        [GraphQLMutation]
+        public Expression<Func<LeagueDbContext,Player>> UpdatePlayer(LeagueDbContext context, UpdatePlayer args)
+        {
+            var playerToUpdate = context.Players.First(x => x.Id == args.Id);
+
+            if(!string.IsNullOrWhiteSpace(args.Name))
+                playerToUpdate.Name = args.Name;
+
+            if(!string.IsNullOrWhiteSpace(args.Link))
+            {
+                context.Remove(playerToUpdate.Media);
+
+                playerToUpdate.Media.Url = args.Link;
+            }
+
+            context.Players.Update(playerToUpdate);
+            context.SaveChanges();
+
+            return ctx => playerToUpdate;
+        }
     }
 }
