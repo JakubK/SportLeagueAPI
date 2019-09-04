@@ -73,7 +73,7 @@ namespace SportLeagueAPI
                 app.UseHsts();
             }
             app.UseMiddleware<GraphQLFileUploadMiddleware>();
-            app.UseMiddleware<AuthMiddleware>();
+            // app.UseMiddleware<AuthMiddleware>();
             app.UseStaticFiles(new StaticFileOptions()
             {
                 FileProvider = new PhysicalFileProvider(pathsProvider.MediaPath),
