@@ -33,7 +33,7 @@ namespace SportLeagueAPI.Context
             modelBuilder.Entity<Settlement>().HasData(new Settlement{ Id= 2, Name = "Settlement 2", MediaId = 2});
 
             //Events
-            modelBuilder.Entity<Event>().HasData(new Event{ Id= 1, Name = "Test Event", SettlementId = 1});
+            modelBuilder.Entity<Event>().HasData(new Event{ Id= 1, Name = "Test Event", SettlementId = 1, Season = 1});
 
             //Player
             modelBuilder.Entity<Player>().HasData(new Player{Id = 1, Name="Player 1", SettlementId = 1, MediaId=3});
