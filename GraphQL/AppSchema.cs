@@ -2,6 +2,7 @@ using System.Linq;
 using EntityGraphQL.Schema;
 using SportLeagueAPI.Context;
 using SportLeagueAPI.DTO;
+using SportLeagueAPI.Models;
 
 namespace SportLeagueAPI.GraphQL
 {
@@ -16,7 +17,10 @@ namespace SportLeagueAPI.GraphQL
             schema.AddMutationFrom(new SettlementMutations());
             schema.AddMutationFrom(new PlayerMutations());
 
-            //points fields
+
+            schema.Type<Event>().AddField("players", ctx => ctx.Scores.Select(x => x.Player),"Players");
+
+            //points fields     
             schema.Type<Settlement>().AddField("points", ctx => ctx.Players.Sum(x => x.Scores.Sum(y => y.Value)),"Total points of Settlement");
             schema.Type<Player>().AddField("points",ctx => ctx.Scores.Sum(y => y.Value),"Player points");
 
@@ -25,6 +29,8 @@ namespace SportLeagueAPI.GraphQL
             schema.Type<News>().ReplaceField("media", ctx => ctx.Media.Url,"Url of photo attached to News");
             schema.Type<Player>().ReplaceField("media",ctx => ctx.Media.Url,"Url of Player Photo");
             schema.Type<Event>().ReplaceField("medias", ctx => ctx.Medias.Select(x => x.Url),"Set of Urls to images for this Event");
+
+            schema.Type<Player>().AddField("settlementName",ctx => ctx.Settlement.Name,"Name of player settlement");
 
             //top fields
             schema.AddField("topNews",new {
