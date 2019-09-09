@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using EntityGraphQL.Schema;
@@ -29,7 +30,7 @@ namespace SportLeagueAPI.GraphQL
                     newEvent.Scores.Add(new Score
                     {
                         PlayerId = item.PlayerId,
-                        Value = item.Value
+                        Value = item.Points
                     });
                 }
 
@@ -51,8 +52,7 @@ namespace SportLeagueAPI.GraphQL
         [GraphQLMutation]
         public Expression<Func<LeagueDbContext,Event>> UpdateEvent(LeagueDbContext context, UpdateEvent args)
         {
-            var eventToUpdate = context.Events.Include(x => x.Medias).First(x => x.Id == args.Id);
-
+            var eventToUpdate = context.Events.Include(x => x.Medias).Include(x => x.Scores).First(x => x.Id == args.Id);
             if(!string.IsNullOrWhiteSpace(args.Name))
                 eventToUpdate.Name = args.Name;
 
@@ -61,30 +61,27 @@ namespace SportLeagueAPI.GraphQL
 
             if(args.Date != null)
                 eventToUpdate.Date = args.Date;
-            
-            if(args.Links.Length != 0)
+
+            if(args.Links != null)
             {
                 //delete old ones and add new ones
-                foreach(var media in eventToUpdate.Medias)
-                    context.Remove(media);
-
+                context.RemoveRange(eventToUpdate.Medias);
                 eventToUpdate.Medias = context.Medias.Where(x => args.Links.Contains(x.Url)).ToArray();
             }
-
-            if(args.Scores.Length != 0)
-            {
-                //delete old ones and add new ones
-                foreach(var score in eventToUpdate.Scores)
-                    context.Remove(score);
-
-                foreach(var score in args.Scores)            
-                    eventToUpdate.Scores.Add(new Score
+            
+            if(args.Scores != null)
+            {                
+                context.Scores.RemoveRange(eventToUpdate.Scores);
+                foreach(var score in args.Scores)
                 {
-                    PlayerId = score.PlayerId,
-                    Value = score.Value
-                });
+                    eventToUpdate.Scores.Add(new Score
+                    {
+                        PlayerId = score.PlayerId,
+                        Value = score.Points,
+                        EventId = eventToUpdate.Id
+                    });
+                }
             }
-
             context.Events.Update(eventToUpdate);
             context.SaveChanges();
 
