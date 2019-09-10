@@ -23,18 +23,22 @@ namespace SportLeagueAPI.GraphQL
             
             if(args.Links != null)
                 newEvent.Medias = context.Medias.Where(x => args.Links.Contains(x.Url)).ToArray();
-            
+                 
+            context.Events.Add(newEvent);
+
             if(args.Scores != null)
+            {
                 foreach(var item in args.Scores)
                 {
-                    newEvent.Scores.Add(new Score
+                    context.Scores.Add(new Score()
                     {
-                        PlayerId = item.PlayerId,
-                        Value = item.Points
+                            PlayerId = item.PlayerId,
+                            Points = item.Points,
+                            EventId = newEvent.Id
                     });
                 }
+            }
 
-            context.Events.Add(newEvent);
             context.SaveChanges();
 
             return ctx => newEvent;
@@ -74,10 +78,10 @@ namespace SportLeagueAPI.GraphQL
                 context.Scores.RemoveRange(eventToUpdate.Scores);
                 foreach(var score in args.Scores)
                 {
-                    eventToUpdate.Scores.Add(new Score
-                    {
+                    
+                    context.Scores.Add(new Score{
                         PlayerId = score.PlayerId,
-                        Value = score.Points,
+                        Points = score.Points,
                         EventId = eventToUpdate.Id
                     });
                 }

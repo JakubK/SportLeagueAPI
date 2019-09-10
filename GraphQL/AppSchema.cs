@@ -21,8 +21,8 @@ namespace SportLeagueAPI.GraphQL
             schema.Type<Event>().AddField("players", ctx => ctx.Scores.Select(x => x.Player),"Players");
 
             //points fields     
-            schema.Type<Settlement>().AddField("points", ctx => ctx.Players.Sum(x => x.Scores.Sum(y => y.Value)),"Total points of Settlement");
-            schema.Type<Player>().AddField("points",ctx => ctx.Scores.Sum(y => y.Value),"Player points");
+            schema.Type<Settlement>().AddField("points", ctx => ctx.Players.Sum(x => x.Scores.Sum(y => y.Points)),"Total points of Settlement");
+            schema.Type<Player>().AddField("points",ctx => ctx.Scores.Sum(y => y.Points),"Player points");
 
             //media fields replacement
             schema.Type<Settlement>().ReplaceField("media",ctx => ctx.Media.Url,"Url of Settlement Image");
