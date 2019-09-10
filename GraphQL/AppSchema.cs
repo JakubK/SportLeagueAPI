@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using EntityGraphQL.Schema;
 using SportLeagueAPI.Context;
@@ -17,6 +18,8 @@ namespace SportLeagueAPI.GraphQL
             schema.AddMutationFrom(new SettlementMutations());
             schema.AddMutationFrom(new PlayerMutations());
 
+
+            schema.Type<Score>().AddField("playerName", ctx => ctx.Player.Name,"Name of Score owner");
 
             schema.Type<Event>().AddField("players", ctx => ctx.Scores.Select(x => x.Player),"Players");
 
