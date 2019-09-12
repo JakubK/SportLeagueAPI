@@ -27,8 +27,7 @@ namespace SportLeagueAPI.Services
       var request = _httpContext.HttpContext.Request;
       var filePath = _pathsProvider.MediaPath;
 
-      string url = $"{request.Scheme}//:{request.Host}/media/{newName}";
-
+      string url = $"{request.Scheme}://{request.Host}/media/{newName}";
       _ctx.Medias.Add(new Media{
         Url = url
       });
@@ -52,7 +51,7 @@ namespace SportLeagueAPI.Services
       var request = _httpContext.HttpContext.Request;
       var filePath = _pathsProvider.MediaPath;
 
-      string url = $"{request.Scheme}//:{request.Host}/media/{newName}";
+      string url = $"{request.Scheme}://{request.Host}/media/{newName}";
 
       _ctx.Medias.Add(new Media{
         Url = url
