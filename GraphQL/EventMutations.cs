@@ -20,25 +20,23 @@ namespace SportLeagueAPI.GraphQL
             newEvent.Name = args.Name;
             newEvent.Date = args.Date;
             newEvent.Description = args.Description;
+            newEvent.Season = args.Season;
             
             if(args.Links != null)
                 newEvent.Medias = context.Medias.Where(x => args.Links.Contains(x.Url)).ToArray();
                  
             context.Events.Add(newEvent);
 
-            if(args.Scores != null)
+            foreach(var item in args.Scores)
             {
-                foreach(var item in args.Scores)
+                context.Scores.Add(new Score()
                 {
-                    context.Scores.Add(new Score()
-                    {
-                            PlayerId = item.PlayerId,
-                            Points = item.Points,
-                            EventId = newEvent.Id
-                    });
-                }
+                        PlayerId = item.PlayerId,
+                        Points = item.Points,
+                        EventId = newEvent.Id
+                });
             }
-
+            
             context.SaveChanges();
 
             return ctx => newEvent;
