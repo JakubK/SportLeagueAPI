@@ -47,8 +47,18 @@ namespace SportLeagueAPI.Middleware
             forms.TryGetValue("graphql", out var operationsJson);
 
             QueryRequest request = JsonConvert.DeserializeObject<QueryRequest>(operationsJson);
-
-            request.Variables.Add("links", links.ToList());
+            if(request.Variables.Keys.Contains("links"))
+            {
+                var oldLinks = JsonConvert.DeserializeObject<List<string>>(request.Variables["links"].ToString());
+                request.Variables.Remove("links");
+                request.Variables.Add("links", links.Concat(oldLinks).ToList());
+                foreach(string link in (List<string>)request.Variables["links"])
+                    System.Console.Error.WriteLine(link);
+            }
+            else
+            {
+                request.Variables.Add("links", links.ToList());
+            }
             
             var data = _dbContext.QueryObject(request, _schemaProvider);
             if(data.Errors != null && data.Errors.Count > 0)
