@@ -55,35 +55,34 @@ namespace SportLeagueAPI.GraphQL
         public Expression<Func<LeagueDbContext,Event>> UpdateEvent(LeagueDbContext context, UpdateEvent args)
         {
             var eventToUpdate = context.Events.Include(x => x.Medias).Include(x => x.Scores).First(x => x.Id == args.Id);
-            if(!string.IsNullOrWhiteSpace(args.Name))
-                eventToUpdate.Name = args.Name;
-
-            if(!string.IsNullOrWhiteSpace(args.Description))
-                eventToUpdate.Description = args.Description;
-
-            if(args.Date != null)
-                eventToUpdate.Date = args.Date;
+            
+            eventToUpdate.Name = args.Name;
+            eventToUpdate.Description = args.Description;
+            eventToUpdate.Date = args.Date;
+            eventToUpdate.Season = args.Season;
 
             if(args.Links != null)
             {
                 //delete old ones and add new ones
                 context.RemoveRange(eventToUpdate.Medias);
-                eventToUpdate.Medias = context.Medias.Where(x => args.Links.Contains(x.Url)).ToArray();
-            }
-            
-            if(args.Scores != null)
-            {                
-                context.Scores.RemoveRange(eventToUpdate.Scores);
-                foreach(var score in args.Scores)
+                var linkMedias = context.Medias.Where(x => args.Links.Contains(x.Url));
+                foreach(var linkMedia in linkMedias)
                 {
-                    
-                    context.Scores.Add(new Score{
-                        PlayerId = score.PlayerId,
-                        Points = score.Points,
-                        EventId = eventToUpdate.Id
-                    });
+                    linkMedia.EventId = eventToUpdate.Id;
                 }
+                context.UpdateRange(linkMedias);
             }
+                      
+            context.Scores.RemoveRange(eventToUpdate.Scores);
+            foreach(var score in args.Scores)
+            {
+                context.Scores.Add(new Score{
+                    PlayerId = score.PlayerId,
+                    Points = score.Points,
+                    EventId = eventToUpdate.Id
+                });
+            }
+
             context.Events.Update(eventToUpdate);
             context.SaveChanges();
 
