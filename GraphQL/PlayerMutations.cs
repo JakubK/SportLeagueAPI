@@ -43,15 +43,12 @@ namespace SportLeagueAPI.GraphQL
         public Expression<Func<LeagueDbContext,Player>> UpdatePlayer(LeagueDbContext context, UpdatePlayer args)
         {
             var playerToUpdate = context.Players.First(x => x.Id == args.Id);
-
-            if(!string.IsNullOrWhiteSpace(args.Name))
-                playerToUpdate.Name = args.Name;
-
-            if(!string.IsNullOrWhiteSpace(args.Link))
+            playerToUpdate.Name = args.Name;
+            playerToUpdate.SettlementId = args.SettlementId;
+            if(args.Links.Count > 0)
             {
-                context.Remove(playerToUpdate.Media);
-
-                playerToUpdate.Media.Url = args.Link;
+                var media = context.Medias.First(x => x.Url == args.Links[0]);
+                playerToUpdate.MediaId = media.Id;
             }
 
             context.Players.Update(playerToUpdate);
