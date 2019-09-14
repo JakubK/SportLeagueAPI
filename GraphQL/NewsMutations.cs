@@ -19,8 +19,10 @@ namespace SportLeagueAPI.GraphQL
             newNews.Date = args.Date;
             newNews.Description = args.Description;
 
-            newNews.MediaId = context.Medias.FirstOrDefault(x => x.Url == args.Link).Id;
-
+            if(args.Links.Count > 0)
+            {
+                newNews.MediaId = context.Medias.FirstOrDefault(x => x.Url == args.Links[0]).Id;
+            }
             context.Newses.Add(newNews);
             context.SaveChanges();
 
@@ -41,20 +43,14 @@ namespace SportLeagueAPI.GraphQL
         {
             var newsToUpdate = context.Newses.First(x => x.Id == args.Id);
 
-            if(!string.IsNullOrWhiteSpace(args.Name))
-                newsToUpdate.Name = args.Name;
+            newsToUpdate.Name = args.Name;
+            newsToUpdate.Description = args.Description;
+            newsToUpdate.Date = args.Date;
 
-            if(!string.IsNullOrWhiteSpace(args.Description))
-                newsToUpdate.Description = args.Description;
-
-            if(args.Date != null)
-                newsToUpdate.Date = args.Date;
-
-            if(!string.IsNullOrWhiteSpace(args.Link))
+            if(args.Links.Count > 0)
             {
-                context.Remove(newsToUpdate.Media);
-
-                newsToUpdate.Media.Url = args.Link;
+                var media = context.Medias.First(x => x.Url == args.Links[0]);
+                newsToUpdate.MediaId = media.Id;            
             }
 
             context.Newses.Update(newsToUpdate);
