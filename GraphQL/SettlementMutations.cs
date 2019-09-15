@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 using EntityGraphQL.Schema;
+using Microsoft.EntityFrameworkCore;
 using SportLeagueAPI.Context;
 using SportLeagueAPI.DTO;
 using SportLeagueAPI.Models;
@@ -29,7 +30,7 @@ namespace SportLeagueAPI.GraphQL
         [GraphQLMutation]
         public Expression<Func<LeagueDbContext,Settlement>> DeleteSettlement(LeagueDbContext context, DeleteItem args)
         {
-            var settlementToRemove = context.Settlements.First(x => x.Id == args.Id);
+            var settlementToRemove = context.Settlements.Include(x => x.Players).First(x => x.Id == args.Id);
             context.Remove(settlementToRemove);
             context.SaveChanges();
             return ctx => settlementToRemove;
