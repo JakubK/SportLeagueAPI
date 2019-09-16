@@ -19,7 +19,8 @@ namespace SportLeagueAPI.GraphQL
             newSettlement.Name = args.Name;
             newSettlement.Description = args.Description;
 
-            newSettlement.MediaId = context.Medias.FirstOrDefault(x => x.Url == args.Link).Id;
+            if(args.Links.Count > 0)
+                newSettlement.MediaId = context.Medias.FirstOrDefault(x => x.Url == args.Links[0]).Id;
             
             context.Settlements.Add(newSettlement);
             context.SaveChanges();
