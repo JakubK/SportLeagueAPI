@@ -42,16 +42,13 @@ namespace SportLeagueAPI.GraphQL
         {
             var settlementToUpdate = context.Settlements.First(x => x.Id == args.Id);
 
-            if(!string.IsNullOrWhiteSpace(args.Name))
-                settlementToUpdate.Name = args.Name;
+            settlementToUpdate.Name = args.Name;
+            settlementToUpdate.Description = args.Description;
 
-            if(!string.IsNullOrWhiteSpace(args.Description))
-                settlementToUpdate.Description = args.Description;
-
-            if(!string.IsNullOrWhiteSpace(args.Link))
+            if(args.Links.Count > 0)
             {
-                context.Remove(settlementToUpdate.Media);
-                settlementToUpdate.Media.Url = args.Link;
+                var media = context.Medias.First(x => x.Url == args.Links[0]);
+                settlementToUpdate.MediaId = media.Id;
             }
 
             context.Settlements.Update(settlementToUpdate);
