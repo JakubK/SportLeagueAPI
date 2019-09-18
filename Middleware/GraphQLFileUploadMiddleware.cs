@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using EntityGraphQL;
 using EntityGraphQL.Schema;
@@ -29,7 +30,6 @@ namespace SportLeagueAPI.Middleware
                 await _next(context);
                 return;
             }
-
             //retrieve files
             var files = context.Request.Form.Files;
             //publish them and fetch their links
@@ -47,11 +47,18 @@ namespace SportLeagueAPI.Middleware
             forms.TryGetValue("graphql", out var operationsJson);
 
             QueryRequest request = JsonConvert.DeserializeObject<QueryRequest>(operationsJson);
-
-            if(links.Count == 1)
-                request.Variables.Add("link", links[0]);
-            else if(links.Count > 1)
-                request.Variables.Add("link", links.ToArray());                
+            if(request.Variables.Keys.Contains("links"))
+            {
+                var oldLinks = JsonConvert.DeserializeObject<List<string>>(request.Variables["links"].ToString());
+                request.Variables.Remove("links");
+                request.Variables.Add("links", links.Concat(oldLinks).ToList());
+                foreach(string link in (List<string>)request.Variables["links"])
+                    System.Console.Error.WriteLine(link);
+            }
+            else
+            {
+                request.Variables.Add("links", links.ToList());
+            }
             
             var data = _dbContext.QueryObject(request, _schemaProvider);
             if(data.Errors != null && data.Errors.Count > 0)

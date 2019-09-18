@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace SportLeagueAPI.Migrations
 {
@@ -29,7 +28,7 @@ namespace SportLeagueAPI.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(nullable: true),
                     Description = table.Column<string>(nullable: true),
-                    Date = table.Column<DateTime>(nullable: false),
+                    Date = table.Column<string>(nullable: true),
                     MediaId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
@@ -72,7 +71,8 @@ namespace SportLeagueAPI.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     Name = table.Column<string>(nullable: true),
                     Description = table.Column<string>(nullable: true),
-                    Date = table.Column<DateTime>(nullable: false),
+                    Season = table.Column<int>(nullable: false),
+                    Date = table.Column<string>(nullable: true),
                     SettlementId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
@@ -119,7 +119,7 @@ namespace SportLeagueAPI.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Value = table.Column<int>(nullable: false),
+                    Points = table.Column<int>(nullable: false),
                     PlayerId = table.Column<int>(nullable: true),
                     EventId = table.Column<int>(nullable: true)
                 },
@@ -168,7 +168,7 @@ namespace SportLeagueAPI.Migrations
             migrationBuilder.InsertData(
                 table: "Newses",
                 columns: new[] { "Id", "Date", "Description", "MediaId", "Name" },
-                values: new object[] { 1, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, 5, "Test News" });
+                values: new object[] { 1, null, null, 5, "Test News" });
 
             migrationBuilder.InsertData(
                 table: "Settlements",
@@ -182,8 +182,8 @@ namespace SportLeagueAPI.Migrations
 
             migrationBuilder.InsertData(
                 table: "Events",
-                columns: new[] { "Id", "Date", "Description", "Name", "SettlementId" },
-                values: new object[] { 1, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), null, "Test Event", 1 });
+                columns: new[] { "Id", "Date", "Description", "Name", "Season", "SettlementId" },
+                values: new object[] { 1, null, null, "Test Event", 1, 1 });
 
             migrationBuilder.InsertData(
                 table: "Players",
@@ -207,12 +207,12 @@ namespace SportLeagueAPI.Migrations
 
             migrationBuilder.InsertData(
                 table: "Scores",
-                columns: new[] { "Id", "EventId", "PlayerId", "Value" },
+                columns: new[] { "Id", "EventId", "PlayerId", "Points" },
                 values: new object[] { 1, 1, 1, 10 });
 
             migrationBuilder.InsertData(
                 table: "Scores",
-                columns: new[] { "Id", "EventId", "PlayerId", "Value" },
+                columns: new[] { "Id", "EventId", "PlayerId", "Points" },
                 values: new object[] { 2, 1, 2, 10 });
 
             migrationBuilder.CreateIndex(

@@ -21,11 +21,13 @@ namespace SportLeagueAPI.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<DateTime>("Date");
+                    b.Property<string>("Date");
 
                     b.Property<string>("Description");
 
                     b.Property<string>("Name");
+
+                    b.Property<int>("Season");
 
                     b.Property<int?>("SettlementId");
 
@@ -36,7 +38,7 @@ namespace SportLeagueAPI.Migrations
                     b.ToTable("Events");
 
                     b.HasData(
-                        new { Id = 1, Date = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), Name = "Test Event", SettlementId = 1 }
+                        new { Id = 1, Name = "Test Event", Season = 1, SettlementId = 1 }
                     );
                 });
 
@@ -71,7 +73,7 @@ namespace SportLeagueAPI.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<DateTime>("Date");
+                    b.Property<string>("Date");
 
                     b.Property<string>("Description");
 
@@ -86,7 +88,7 @@ namespace SportLeagueAPI.Migrations
                     b.ToTable("Newses");
 
                     b.HasData(
-                        new { Id = 1, Date = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), MediaId = 5, Name = "Test News" }
+                        new { Id = 1, MediaId = 5, Name = "Test News" }
                     );
                 });
 
@@ -124,7 +126,7 @@ namespace SportLeagueAPI.Migrations
 
                     b.Property<int?>("PlayerId");
 
-                    b.Property<int>("Value");
+                    b.Property<int>("Points");
 
                     b.HasKey("Id");
 
@@ -135,8 +137,8 @@ namespace SportLeagueAPI.Migrations
                     b.ToTable("Scores");
 
                     b.HasData(
-                        new { Id = 1, EventId = 1, PlayerId = 1, Value = 10 },
-                        new { Id = 2, EventId = 1, PlayerId = 2, Value = 10 }
+                        new { Id = 1, EventId = 1, PlayerId = 1, Points = 10 },
+                        new { Id = 2, EventId = 1, PlayerId = 2, Points = 10 }
                     );
                 });
 
@@ -167,7 +169,7 @@ namespace SportLeagueAPI.Migrations
             modelBuilder.Entity("SportLeagueAPI.DTO.Event", b =>
                 {
                     b.HasOne("SportLeagueAPI.DTO.Settlement", "Settlement")
-                        .WithMany("Events")
+                        .WithMany()
                         .HasForeignKey("SettlementId");
                 });
 

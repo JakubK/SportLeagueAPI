@@ -33,7 +33,7 @@ namespace SportLeagueAPI.Context
             modelBuilder.Entity<Settlement>().HasData(new Settlement{ Id= 2, Name = "Settlement 2", MediaId = 2});
 
             //Events
-            modelBuilder.Entity<Event>().HasData(new Event{ Id= 1, Name = "Test Event", SettlementId = 1});
+            modelBuilder.Entity<Event>().HasData(new Event{ Id= 1, Name = "Test Event", SettlementId = 1, Season = 1});
 
             //Player
             modelBuilder.Entity<Player>().HasData(new Player{Id = 1, Name="Player 1", SettlementId = 1, MediaId=3});
@@ -43,8 +43,8 @@ namespace SportLeagueAPI.Context
             modelBuilder.Entity<News>().HasData(new News{Id = 1, Name="Test News", MediaId=5});
 
             //Score
-            modelBuilder.Entity<Score>().HasData(new Score{Id = 1, Value=10, PlayerId = 1, EventId = 1});
-            modelBuilder.Entity<Score>().HasData(new Score{Id = 2, Value=10, PlayerId = 2, EventId = 1});
+            modelBuilder.Entity<Score>().HasData(new Score{Id = 1, Points=10, PlayerId = 1, EventId = 1});
+            modelBuilder.Entity<Score>().HasData(new Score{Id = 2, Points=10, PlayerId = 2, EventId = 1});
         }
     }
 }

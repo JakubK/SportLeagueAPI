@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 
 namespace SportLeagueAPI.Models
 {
-    public class CreateEvent
+    public class UpdateEvent
     {
+        public int Id {get;set;}
         public string Name {get;set;}
         public string Description {get;set;}
         public int Season {get;set;}
