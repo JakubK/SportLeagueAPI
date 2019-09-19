@@ -26,6 +26,8 @@ namespace SportLeagueAPI.GraphQL
             //points fields     
             schema.Type<Settlement>().AddField("points", ctx => ctx.Players.Sum(x => x.Scores.Sum(y => y.Points)),"Total points of Settlement");
             schema.Type<Player>().AddField("points",ctx => ctx.Scores.Sum(y => y.Points),"Player points");
+            //order entities
+            schema.AddField("playersByScore",ctx => ctx.Players.OrderByDescending(x => schema.Type<Player>().GetField("points")),"Players by score descending");
 
             //media fields replacement
             schema.Type<Settlement>().ReplaceField("media",ctx => ctx.Media.Url,"Url of Settlement Image");
@@ -33,7 +35,8 @@ namespace SportLeagueAPI.GraphQL
             schema.Type<Player>().ReplaceField("media",ctx => ctx.Media.Url,"Url of Player Photo");
             schema.Type<Event>().ReplaceField("medias", ctx => ctx.Medias.Select(x => x.Url),"Set of Urls to images for this Event");
 
-            schema.Type<Player>().AddField("settlementName",ctx => ctx.Settlement.Name,"Name of player settlement");
+            //Player settlement field replacement
+            schema.Type<Player>().ReplaceField("settlement", ctx => ctx.Settlement.Name,"Name of Player's Settlement");
 
             //top fields
             schema.AddField("topNews",new {

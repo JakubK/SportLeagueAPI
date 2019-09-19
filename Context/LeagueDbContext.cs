@@ -40,7 +40,7 @@ namespace SportLeagueAPI.Context
             modelBuilder.Entity<Player>().HasData(new Player{Id = 2, Name="Player 2", SettlementId = 2, MediaId=4});
 
             //News
-            modelBuilder.Entity<News>().HasData(new News{Id = 1, Name="Test News", MediaId=5});
+            modelBuilder.Entity<News>().HasData(new News{Id = 1, Description = "Sample description of news", Name="Test News", MediaId=5});
 
             //Score
             modelBuilder.Entity<Score>().HasData(new Score{Id = 1, Points=10, PlayerId = 1, EventId = 1});
