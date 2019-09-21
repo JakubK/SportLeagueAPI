@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SportLeagueAPI.Context;
 
 namespace SportLeagueAPI.Migrations
 {
     [DbContext(typeof(LeagueDbContext))]
-    partial class LeagueDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190920110641_MissingNewsDate")]
+    partial class MissingNewsDate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -179,7 +181,7 @@ namespace SportLeagueAPI.Migrations
                         .HasForeignKey("PlayerId");
 
                     b.HasOne("SportLeagueAPI.DTO.Settlement", "Settlement")
-                        .WithMany("Events")
+                        .WithMany()
                         .HasForeignKey("SettlementId");
                 });
 

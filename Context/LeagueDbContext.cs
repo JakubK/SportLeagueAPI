@@ -33,18 +33,20 @@ namespace SportLeagueAPI.Context
             modelBuilder.Entity<Settlement>().HasData(new Settlement{ Id= 2, Name = "Settlement 2", MediaId = 2});
 
             //Events
-            modelBuilder.Entity<Event>().HasData(new Event{ Id= 1, Name = "Test Event", SettlementId = 1, Season = 1});
+            modelBuilder.Entity<Event>().HasData(new Event{ Id= 1, Name = "Test Event", SettlementId = 1, Date="2019-02-01",Season = 1});
+            modelBuilder.Entity<Event>().HasData(new Event{ Id= 2, Name = "Cool Event", SettlementId = 2, Date="2018-01-02",Season = 2});
 
             //Player
             modelBuilder.Entity<Player>().HasData(new Player{Id = 1, Name="Player 1", SettlementId = 1, MediaId=3});
             modelBuilder.Entity<Player>().HasData(new Player{Id = 2, Name="Player 2", SettlementId = 2, MediaId=4});
 
             //News
-            modelBuilder.Entity<News>().HasData(new News{Id = 1, Description = "Sample description of news", Name="Test News", MediaId=5});
+            modelBuilder.Entity<News>().HasData(new News{Id = 1,Date="2012-02-03", Description = "Sample description of news", Name="Test News", MediaId=5});
 
             //Score
             modelBuilder.Entity<Score>().HasData(new Score{Id = 1, Points=10, PlayerId = 1, EventId = 1});
             modelBuilder.Entity<Score>().HasData(new Score{Id = 2, Points=10, PlayerId = 2, EventId = 1});
+            modelBuilder.Entity<Score>().HasData(new Score{Id = 3, Points=40, PlayerId = 1, EventId = 2});
         }
     }
 }

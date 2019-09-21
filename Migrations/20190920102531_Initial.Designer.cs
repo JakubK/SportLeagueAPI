@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SportLeagueAPI.Context;
 
 namespace SportLeagueAPI.Migrations
 {
     [DbContext(typeof(LeagueDbContext))]
-    partial class LeagueDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190920102531_Initial")]
+    partial class Initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -93,7 +95,7 @@ namespace SportLeagueAPI.Migrations
                     b.ToTable("Newses");
 
                     b.HasData(
-                        new { Id = 1, Date = "2012-02-03", Description = "Sample description of news", MediaId = 5, Name = "Test News" }
+                        new { Id = 1, Description = "Sample description of news", MediaId = 5, Name = "Test News" }
                     );
                 });
 
@@ -179,7 +181,7 @@ namespace SportLeagueAPI.Migrations
                         .HasForeignKey("PlayerId");
 
                     b.HasOne("SportLeagueAPI.DTO.Settlement", "Settlement")
-                        .WithMany("Events")
+                        .WithMany()
                         .HasForeignKey("SettlementId");
                 });
 
