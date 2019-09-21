@@ -64,29 +64,6 @@ namespace SportLeagueAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Events",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(nullable: true),
-                    Description = table.Column<string>(nullable: true),
-                    Season = table.Column<int>(nullable: false),
-                    Date = table.Column<string>(nullable: true),
-                    SettlementId = table.Column<int>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Events", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Events_Settlements_SettlementId",
-                        column: x => x.SettlementId,
-                        principalTable: "Settlements",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Players",
                 columns: table => new
                 {
@@ -107,6 +84,36 @@ namespace SportLeagueAPI.Migrations
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Players_Settlements_SettlementId",
+                        column: x => x.SettlementId,
+                        principalTable: "Settlements",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Events",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Name = table.Column<string>(nullable: true),
+                    Description = table.Column<string>(nullable: true),
+                    Season = table.Column<int>(nullable: false),
+                    Date = table.Column<string>(nullable: true),
+                    SettlementId = table.Column<int>(nullable: true),
+                    PlayerId = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Events", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Events_Players_PlayerId",
+                        column: x => x.PlayerId,
+                        principalTable: "Players",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Events_Settlements_SettlementId",
                         column: x => x.SettlementId,
                         principalTable: "Settlements",
                         principalColumn: "Id",
@@ -168,7 +175,7 @@ namespace SportLeagueAPI.Migrations
             migrationBuilder.InsertData(
                 table: "Newses",
                 columns: new[] { "Id", "Date", "Description", "MediaId", "Name" },
-                values: new object[] { 1, null, null, 5, "Test News" });
+                values: new object[] { 1, null, "Sample description of news", 5, "Test News" });
 
             migrationBuilder.InsertData(
                 table: "Settlements",
@@ -182,8 +189,13 @@ namespace SportLeagueAPI.Migrations
 
             migrationBuilder.InsertData(
                 table: "Events",
-                columns: new[] { "Id", "Date", "Description", "Name", "Season", "SettlementId" },
-                values: new object[] { 1, null, null, "Test Event", 1, 1 });
+                columns: new[] { "Id", "Date", "Description", "Name", "PlayerId", "Season", "SettlementId" },
+                values: new object[] { 1, "2019-02-01", null, "Test Event", null, 1, 1 });
+
+            migrationBuilder.InsertData(
+                table: "Events",
+                columns: new[] { "Id", "Date", "Description", "Name", "PlayerId", "Season", "SettlementId" },
+                values: new object[] { 2, "2018-01-02", null, "Cool Event", null, 2, 2 });
 
             migrationBuilder.InsertData(
                 table: "Players",
@@ -213,7 +225,17 @@ namespace SportLeagueAPI.Migrations
             migrationBuilder.InsertData(
                 table: "Scores",
                 columns: new[] { "Id", "EventId", "PlayerId", "Points" },
+                values: new object[] { 3, 2, 1, 40 });
+
+            migrationBuilder.InsertData(
+                table: "Scores",
+                columns: new[] { "Id", "EventId", "PlayerId", "Points" },
                 values: new object[] { 2, 1, 2, 10 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Events_PlayerId",
+                table: "Events",
+                column: "PlayerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Events_SettlementId",
@@ -266,6 +288,10 @@ namespace SportLeagueAPI.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropForeignKey(
+                name: "FK_Events_Players_PlayerId",
+                table: "Events");
+
             migrationBuilder.DropForeignKey(
                 name: "FK_Events_Settlements_SettlementId",
                 table: "Events");

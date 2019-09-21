@@ -9,8 +9,8 @@ using SportLeagueAPI.Context;
 namespace SportLeagueAPI.Migrations
 {
     [DbContext(typeof(LeagueDbContext))]
-    [Migration("20190913102307_Initial")]
-    partial class Initial
+    [Migration("20190920111039_EventsToSettlement")]
+    partial class EventsToSettlement
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -29,18 +29,23 @@ namespace SportLeagueAPI.Migrations
 
                     b.Property<string>("Name");
 
+                    b.Property<int?>("PlayerId");
+
                     b.Property<int>("Season");
 
                     b.Property<int?>("SettlementId");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("PlayerId");
+
                     b.HasIndex("SettlementId");
 
                     b.ToTable("Events");
 
                     b.HasData(
-                        new { Id = 1, Name = "Test Event", Season = 1, SettlementId = 1 }
+                        new { Id = 1, Date = "2019-02-01", Name = "Test Event", Season = 1, SettlementId = 1 },
+                        new { Id = 2, Date = "2018-01-02", Name = "Cool Event", Season = 2, SettlementId = 2 }
                     );
                 });
 
@@ -90,7 +95,7 @@ namespace SportLeagueAPI.Migrations
                     b.ToTable("Newses");
 
                     b.HasData(
-                        new { Id = 1, MediaId = 5, Name = "Test News" }
+                        new { Id = 1, Date = "2012-02-03", Description = "Sample description of news", MediaId = 5, Name = "Test News" }
                     );
                 });
 
@@ -140,7 +145,8 @@ namespace SportLeagueAPI.Migrations
 
                     b.HasData(
                         new { Id = 1, EventId = 1, PlayerId = 1, Points = 10 },
-                        new { Id = 2, EventId = 1, PlayerId = 2, Points = 10 }
+                        new { Id = 2, EventId = 1, PlayerId = 2, Points = 10 },
+                        new { Id = 3, EventId = 2, PlayerId = 1, Points = 40 }
                     );
                 });
 
@@ -170,8 +176,12 @@ namespace SportLeagueAPI.Migrations
 
             modelBuilder.Entity("SportLeagueAPI.DTO.Event", b =>
                 {
+                    b.HasOne("SportLeagueAPI.DTO.Player")
+                        .WithMany("Events")
+                        .HasForeignKey("PlayerId");
+
                     b.HasOne("SportLeagueAPI.DTO.Settlement", "Settlement")
-                        .WithMany()
+                        .WithMany("Events")
                         .HasForeignKey("SettlementId");
                 });
 
