@@ -18,6 +18,22 @@ namespace SportLeagueAPI.GraphQL
             schema.AddMutationFrom(new SettlementMutations());
             schema.AddMutationFrom(new PlayerMutations());
 
+            //search queries
+            schema.AddField("findPlayers", new{
+                phrase = ""
+            }, (ctx, param) => ctx.Players.Where( x=> x.Name.Contains(param.phrase)),"Query that returns set of Players that contain passed phrase in their names");
+            
+            schema.AddField("findEvents", new{
+                phrase = ""
+            }, (ctx, param) => ctx.Events.Where( x=> x.Name.Contains(param.phrase)),"Query that returns set of Events that contain passed phrase in their names");
+
+            schema.AddField("findNewses", new{
+                phrase = ""
+            }, (ctx, param) => ctx.Newses.Where( x=> x.Name.Contains(param.phrase)),"Query that returns set of Newses that contain passed phrase in their names");
+
+            schema.AddField("findSettlements", new{
+                phrase = ""
+            }, (ctx, param) => ctx.Settlements.Where( x=> x.Name.Contains(param.phrase)),"Query that returns set of Settlements that contains passed phrase in their names");
 
             schema.Type<Score>().AddField("playerName", ctx => ctx.Player.Name,"Name of Score owner");
 
