@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using EntityGraphQL.Schema;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -14,9 +16,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using SportLeagueAPI.Context;
 using SportLeagueAPI.GraphQL;
 using SportLeagueAPI.Middleware;
+using SportLeagueAPI.Models.Options;
 using SportLeagueAPI.Repositories;
 using SportLeagueAPI.Services;
 
@@ -40,9 +44,30 @@ namespace SportLeagueAPI
                     .AllowAnyMethod()
                     .AllowAnyHeader();
             }));
+
+            var jwtSection = Configuration.GetSection("Jwt");
+            var jwtOptions = new JwtOptions();
+            jwtSection.Bind(jwtOptions);
+            services.Configure<JwtOptions>(jwtSection);
+
+            services.AddTransient<IJwtHandler,JwtHandler>();
+            services.AddTransient<IAuthService,AuthService>();
+
             services.AddHttpContextAccessor();
             services.AddDbContext<LeagueDbContext>(options => options.UseSqlite(Configuration.GetConnectionString("Database")));
 
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(cfg => 
+                {
+                    cfg.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.Key)),
+                        ValidIssuer = jwtOptions.Issuer,
+                        ValidateAudience = false,
+                        ValidateLifetime = true
+                    };
+                });
+                
             services.AddTransient<IHasher,FileNameHasher>();
             services.AddTransient<IPathsProvider,PathsProvider>();
             services.AddTransient<IMediaUploader,MediaUploader>();
@@ -65,6 +90,7 @@ namespace SportLeagueAPI
                 app.UseHsts();
             }
             app.UseMiddleware<GraphQLFileUploadMiddleware>();
+            // app.UseMiddleware<AuthMiddleware>();
             app.UseStaticFiles(new StaticFileOptions()
             {
                 FileProvider = new PhysicalFileProvider(pathsProvider.MediaPath),

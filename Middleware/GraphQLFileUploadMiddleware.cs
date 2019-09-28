@@ -25,7 +25,7 @@ namespace SportLeagueAPI.Middleware
 
         public async Task InvokeAsync(HttpContext context, IMediaUploader _mediaUploader)
         {
-            if(!context.Request.HasFormContentType)
+            if(!context.Request.HasFormContentType || !context.User.Identity.IsAuthenticated)
             {
                 await _next(context);
                 return;
