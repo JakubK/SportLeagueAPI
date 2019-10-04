@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using EntityGraphQL.Schema;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -18,8 +17,6 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using SportLeagueAPI.Context;
-using SportLeagueAPI.GraphQL;
-using SportLeagueAPI.Middleware;
 using SportLeagueAPI.Models.Options;
 using SportLeagueAPI.Repositories;
 using SportLeagueAPI.Services;
@@ -72,7 +69,6 @@ namespace SportLeagueAPI
             services.AddTransient<IPathsProvider,PathsProvider>();
             services.AddTransient<IMediaUploader,MediaUploader>();
 
-            services.AddSingleton(AppSchema.MakeSchema());
             services.AddMvc();
         }
 
@@ -89,8 +85,6 @@ namespace SportLeagueAPI
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-            app.UseMiddleware<GraphQLFileUploadMiddleware>();
-            // app.UseMiddleware<AuthMiddleware>();
             app.UseStaticFiles(new StaticFileOptions()
             {
                 FileProvider = new PhysicalFileProvider(pathsProvider.MediaPath),
