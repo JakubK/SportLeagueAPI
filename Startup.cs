@@ -20,6 +20,11 @@ using SportLeagueAPI.Context;
 using SportLeagueAPI.Models.Options;
 using SportLeagueAPI.Repositories;
 using SportLeagueAPI.Services;
+using GraphiQl;
+using GraphQL.Server;
+using GraphQL;
+using SportLeagueAPI.GraphQL;
+using GraphQL.Types;
 
 namespace SportLeagueAPI
 {
@@ -64,11 +69,21 @@ namespace SportLeagueAPI
                         ValidateLifetime = true
                     };
                 });
+
                 
             services.AddTransient<IHasher,FileNameHasher>();
             services.AddTransient<IPathsProvider,PathsProvider>();
             services.AddTransient<IMediaUploader,MediaUploader>();
 
+            services.AddSingleton<IDependencyResolver>(s => new FuncDependencyResolver(s.GetRequiredService));
+            services.AddSingleton<IDocumentExecuter,DocumentExecuter>();
+            services.AddSingleton<PlayerType>();
+            services.AddSingleton<LeagueQuery>();
+            
+            var sp = services.BuildServiceProvider();
+            services.AddSingleton<ISchema>(new LeagueSchema(new FuncDependencyResolver(type => sp.GetService(type))));
+
+            services.AddGraphQL();
             services.AddMvc();
         }
 
@@ -90,6 +105,7 @@ namespace SportLeagueAPI
                 FileProvider = new PhysicalFileProvider(pathsProvider.MediaPath),
                 RequestPath = "/media"
             });
+            app.UseGraphiQl("/graphiql","/graphql");
             app.UseMvc();
         }
     }
