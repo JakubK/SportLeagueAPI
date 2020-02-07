@@ -1,3 +1,4 @@
+using System.Linq;
 using GraphQL.Types;
 using SportLeagueAPI.DTO;
 
@@ -15,6 +16,7 @@ namespace SportLeagueAPI.GraphQL.Types
                 type: typeof(ListGraphType<PlayerType>),
                 resolve: context => context.Source.Players
             );
+            Field<IntGraphType>(name: "points", resolve: context => context.Source.Players.Sum(x => x.Scores.Sum(y => y.Points)));
         }
     }
 }

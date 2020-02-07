@@ -81,9 +81,14 @@ namespace SportLeagueAPI
 
             services.AddSingleton<IDependencyResolver>(s => new FuncDependencyResolver(s.GetRequiredService));
             services.AddSingleton<IDocumentExecuter,DocumentExecuter>();
+            
+            services.AddSingleton<ScoreType>();
+            services.AddSingleton<EventType>();
             services.AddSingleton<MediaType>();
+            services.AddSingleton<NewsType>();
             services.AddSingleton<PlayerType>();
             services.AddSingleton<SettlementType>();
+
             services.AddSingleton<LeagueQuery>();
             
             var sp = services.BuildServiceProvider();

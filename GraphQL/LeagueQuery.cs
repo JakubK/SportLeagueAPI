@@ -14,18 +14,25 @@ namespace SportLeagueAPI.GraphQL
             Field<ListGraphType<PlayerType>>("players", resolve: context => dbContext.Players
             .Include(x => x.Settlement)
             .Include(x => x.Scores));
+
             
             Field<ListGraphType<SettlementType>>("settlements", resolve: context => dbContext.Settlements
-            .Include(x => x.Media)
-            .Include(x => x.Players));
+            .Include(x => x.Players).ThenInclude(y => y.Scores));
 
-            Field<SettlementType>("settlement", arguments: new QueryArguments(new QueryArgument<IntGraphType>{
+            Field<SettlementType>("settlement", arguments: 
+                new QueryArguments(new QueryArgument<IntGraphType>{
                 Name = "id"
             }), resolve: context => 
             {
                 var id = context.GetArgument<int>("id");
                 return dbContext.Settlements.FirstOrDefault(x => x.Id == id);
             });
+
+            Field<ListGraphType<EventType>>("events", resolve: context => dbContext.Events
+            .Include(x => x.Scores));
+
+            Field<ListGraphType<NewsType>>("newses",resolve: context => dbContext.Newses
+            .Include(x => x.Media));
         }
     }
 }
