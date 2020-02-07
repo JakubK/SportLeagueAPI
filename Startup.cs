@@ -25,6 +25,7 @@ using GraphQL.Server;
 using GraphQL;
 using SportLeagueAPI.GraphQL;
 using GraphQL.Types;
+using SportLeagueAPI.GraphQL.Types;
 
 namespace SportLeagueAPI
 {
@@ -56,7 +57,10 @@ namespace SportLeagueAPI
             services.AddTransient<IAuthService,AuthService>();
 
             services.AddHttpContextAccessor();
-            services.AddDbContext<LeagueDbContext>(options => options.UseSqlite(Configuration.GetConnectionString("Database")));
+            services.AddDbContext<LeagueDbContext>(options => 
+            {
+                options.UseSqlite(Configuration.GetConnectionString("Database"));
+            });
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(cfg => 
@@ -77,7 +81,9 @@ namespace SportLeagueAPI
 
             services.AddSingleton<IDependencyResolver>(s => new FuncDependencyResolver(s.GetRequiredService));
             services.AddSingleton<IDocumentExecuter,DocumentExecuter>();
+            services.AddSingleton<MediaType>();
             services.AddSingleton<PlayerType>();
+            services.AddSingleton<SettlementType>();
             services.AddSingleton<LeagueQuery>();
             
             var sp = services.BuildServiceProvider();

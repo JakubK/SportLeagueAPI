@@ -1,7 +1,9 @@
 using System.Linq;
 using GraphQL.Types;
+using Microsoft.EntityFrameworkCore;
 using SportLeagueAPI.Context;
 using SportLeagueAPI.DTO;
+using SportLeagueAPI.GraphQL.Types;
 
 namespace SportLeagueAPI.GraphQL
 {
@@ -9,7 +11,21 @@ namespace SportLeagueAPI.GraphQL
     {
         public LeagueQuery(LeagueDbContext dbContext)
         {
-            Field<ListGraphType<PlayerType>>("players", resolve: context => dbContext.Players.AsQueryable());
+            Field<ListGraphType<PlayerType>>("players", resolve: context => dbContext.Players
+            .Include(x => x.Settlement)
+            .Include(x => x.Scores));
+            
+            Field<ListGraphType<SettlementType>>("settlements", resolve: context => dbContext.Settlements
+            .Include(x => x.Media)
+            .Include(x => x.Players));
+
+            Field<SettlementType>("settlement", arguments: new QueryArguments(new QueryArgument<IntGraphType>{
+                Name = "id"
+            }), resolve: context => 
+            {
+                var id = context.GetArgument<int>("id");
+                return dbContext.Settlements.FirstOrDefault(x => x.Id == id);
+            });
         }
     }
 }
