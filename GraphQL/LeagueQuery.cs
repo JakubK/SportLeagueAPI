@@ -19,6 +19,19 @@ namespace SportLeagueAPI.GraphQL
             Field<ListGraphType<SettlementType>>("settlements", resolve: context => dbContext.Settlements
             .Include(x => x.Players).ThenInclude(y => y.Scores));
 
+            Field<ListGraphType<SettlementType>>("topSettlements",arguments: new QueryArguments(new QueryArgument<IntGraphType>
+            {
+                Name = "top"
+            }), 
+            resolve: context => 
+            {
+                int top = context.GetArgument<int>("top");
+                return dbContext.Settlements
+                .Include(x => x.Players)
+                .ThenInclude(y => y.Scores)
+                .OrderByDescending(x => x.Players.Sum(y => y.Scores.Sum(z => z.Points))).Take(top);
+            });
+
             Field<SettlementType>("settlement", arguments: 
                 new QueryArguments(new QueryArgument<IntGraphType>{
                 Name = "id"
@@ -29,10 +42,44 @@ namespace SportLeagueAPI.GraphQL
             });
 
             Field<ListGraphType<EventType>>("events", resolve: context => dbContext.Events
-            .Include(x => x.Scores));
+            .Include(x => x.Scores)
+            .Include(x => x.Medias));
+
+            Field<ListGraphType<EventType>>("topEvents", 
+            arguments: new QueryArguments(new QueryArgument<IntGraphType>{ Name = "top"}),
+            resolve: context => {
+                var top = context.GetArgument<int>("top");
+                return dbContext.Events
+                .Include(x => x.Scores)
+                .Include(x => x.Medias)
+                .OrderByDescending(x => x.Scores.Sum(y => y.Points))
+                .Take(top);
+            });
 
             Field<ListGraphType<NewsType>>("newses",resolve: context => dbContext.Newses
             .Include(x => x.Media));
+
+            Field<ListGraphType<NewsType>>("topNews",arguments: new QueryArguments(new QueryArgument<IntGraphType>
+            {
+                Name = "top"
+            }), resolve: context => 
+            {
+                var top = context.GetArgument<int>("top");
+                return dbContext.Newses.OrderByDescending(x => x.Date).Take(top).Include(x => x.Media);
+            });
+
+            Field<ListGraphType<PlayerType>>("topPlayers", arguments:
+            new QueryArguments(new QueryArgument<IntGraphType>
+            {
+                Name = "top"
+            }), resolve: context => 
+            {
+                var top = context.GetArgument<int>("top");
+                return dbContext.Players
+                .Include(x => x.Settlement)
+                .Include(x => x.Scores)
+                .OrderByDescending(x => x.Scores.Sum(y => y.Points)).Take(top);
+            });
         }
     }
 }

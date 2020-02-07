@@ -35,6 +35,7 @@ namespace SportLeagueAPI.Controllers
 
             if (result.Errors?.Count > 0)
             {
+                Console.Error.WriteLine(result.Errors[0].Message);
                 return BadRequest(result);
             }
 

@@ -10,7 +10,12 @@ namespace SportLeagueAPI.GraphQL.Types
         {
             Field(x => x.Id);
             Field(x => x.Name);
+            Field(x => x.Description);
             Field(x => x.Date);
+            Field<ListGraphType<StringGraphType>>("medias", resolve: context => 
+            {
+                return context.Source.Medias.Select(x => x.Url);
+            });
             Field<ListGraphType<ScoreType>>("scores",resolve: x => x.Source.Scores);
         }
     }
