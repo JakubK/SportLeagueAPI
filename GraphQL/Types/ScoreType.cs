@@ -14,6 +14,11 @@ namespace SportLeagueAPI.GraphQL.Types
                 type: typeof(EventType),
                 resolve: context => context.Source.Event
             );
+            Field(
+                name: "player",
+                type: typeof(PlayerType),
+                resolve: context => context.Source.Player
+            );
         }
     }
 }

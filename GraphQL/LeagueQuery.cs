@@ -67,6 +67,18 @@ namespace SportLeagueAPI.GraphQL
             .Include(x => x.Scores)
             .Include(x => x.Medias));
 
+            Field<EventType>("event", arguments: 
+                new QueryArguments(new QueryArgument<IntGraphType>{
+                Name = "id"
+            }), resolve: context => 
+            {
+                var id = context.GetArgument<int>("id");
+                return dbContext.Events
+                .Include(x => x.Scores).ThenInclude(x => x.Player)
+                .Include(x => x.Medias)
+                .FirstOrDefault(x => x.Id == id);
+            });
+
             Field<ListGraphType<EventType>>()
                 .Name("topEvents")
                 .Argument<NonNullGraphType<IntGraphType>>("top", "top")
@@ -82,6 +94,17 @@ namespace SportLeagueAPI.GraphQL
 
             Field<ListGraphType<NewsType>>("newses",resolve: context => dbContext.Newses
             .Include(x => x.Media));
+
+            Field<NewsType>("news", arguments: 
+                new QueryArguments(new QueryArgument<IntGraphType>{
+                Name = "id"
+            }), resolve: context => 
+            {
+                var id = context.GetArgument<int>("id");
+                return dbContext.Newses
+                .Include(x => x.Media)
+                .FirstOrDefault(x => x.Id == id);
+            });
 
             Field<ListGraphType<NewsType>>("topNews",arguments: new QueryArguments(new QueryArgument<IntGraphType>
             {
