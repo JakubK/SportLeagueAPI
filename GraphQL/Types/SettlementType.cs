@@ -11,12 +11,24 @@ namespace SportLeagueAPI.GraphQL.Types
             Field(x => x.Id);
             Field(x => x.Name);
             Field(x => x.Description);
+
             Field(
                 name: "players",
                 type: typeof(ListGraphType<PlayerType>),
                 resolve: context => context.Source.Players
             );
-            Field<IntGraphType>(name: "points", resolve: context => context.Source.Players.Sum(x => x.Scores.Sum(y => y.Points)));
+            
+            Field(
+                name: "points",
+                type: typeof(IntGraphType),
+                resolve: context => context.Source.Players
+                .Sum(x => x.Scores.Sum(y => y.Points)));
+
+            Field(
+                name: "media",
+                type: typeof(StringGraphType),
+                resolve: context => context.Source.Media.Url
+            );
         }
     }
 }

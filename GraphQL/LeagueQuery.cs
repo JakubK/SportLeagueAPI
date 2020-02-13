@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using GraphQL.Types;
 using Microsoft.EntityFrameworkCore;
@@ -11,10 +12,27 @@ namespace SportLeagueAPI.GraphQL
     {
         public LeagueQuery(LeagueDbContext dbContext)
         {
+            Field<ListGraphType<ScoreType>>("scores", resolve: context => dbContext.Scores
+            .Include(x => x.Event));
+
             Field<ListGraphType<PlayerType>>("players", resolve: context => dbContext.Players
             .Include(x => x.Settlement)
             .Include(x => x.Scores));
 
+            Field<PlayerType>("player", arguments: 
+                new QueryArguments(new QueryArgument<IntGraphType>{
+                Name = "id"
+            }), resolve: context => 
+            {
+                var id = context.GetArgument<int>("id");
+                return dbContext.Players
+                .Include(x => x.Events)
+                .Include(x => x.Scores)
+                    .ThenInclude(x => x.Event)
+                .Include(x => x.Media)
+                .Include(x => x.Settlement)
+                .FirstOrDefault(x => x.Id == id);
+            });
             
             Field<ListGraphType<SettlementType>>("settlements", resolve: context => dbContext.Settlements
             .Include(x => x.Players).ThenInclude(y => y.Scores));
@@ -29,7 +47,8 @@ namespace SportLeagueAPI.GraphQL
                 return dbContext.Settlements
                 .Include(x => x.Players)
                 .ThenInclude(y => y.Scores)
-                .OrderByDescending(x => x.Players.Sum(y => y.Scores.Sum(z => z.Points))).Take(top);
+                .OrderByDescending(x => x.Players.Sum(y => y.Scores.Sum(z => z.Points)))
+                .Take(top);
             });
 
             Field<SettlementType>("settlement", arguments: 
@@ -38,23 +57,28 @@ namespace SportLeagueAPI.GraphQL
             }), resolve: context => 
             {
                 var id = context.GetArgument<int>("id");
-                return dbContext.Settlements.FirstOrDefault(x => x.Id == id);
+                return dbContext.Settlements
+                .Include(x => x.Players).ThenInclude(x => x.Scores).ThenInclude(x => x.Event)
+                .Include(x => x.Media)
+                .FirstOrDefault(x => x.Id == id);
             });
 
             Field<ListGraphType<EventType>>("events", resolve: context => dbContext.Events
             .Include(x => x.Scores)
             .Include(x => x.Medias));
 
-            Field<ListGraphType<EventType>>("topEvents", 
-            arguments: new QueryArguments(new QueryArgument<IntGraphType>{ Name = "top"}),
-            resolve: context => {
-                var top = context.GetArgument<int>("top");
-                return dbContext.Events
-                .Include(x => x.Scores)
-                .Include(x => x.Medias)
-                .OrderByDescending(x => x.Scores.Sum(y => y.Points))
-                .Take(top);
-            });
+            Field<ListGraphType<EventType>>()
+                .Name("topEvents")
+                .Argument<NonNullGraphType<IntGraphType>>("top", "top")
+                .Resolve(context =>
+                {
+                    var top = context.GetArgument<int>("top");
+                    return dbContext.Events
+                    .Include(x => x.Scores)
+                    .Include(x => x.Medias)
+                    .OrderByDescending(x => x.Scores.Sum(y => y.Points))
+                    .Take(top).ToList();
+                });
 
             Field<ListGraphType<NewsType>>("newses",resolve: context => dbContext.Newses
             .Include(x => x.Media));
@@ -65,7 +89,7 @@ namespace SportLeagueAPI.GraphQL
             }), resolve: context => 
             {
                 var top = context.GetArgument<int>("top");
-                return dbContext.Newses.OrderByDescending(x => x.Date).Take(top).Include(x => x.Media);
+                return dbContext.Newses.OrderByDescending(x => x.Date).Take(top).Include(x => x.Media).ToList();
             });
 
             Field<ListGraphType<PlayerType>>("topPlayers", arguments:
@@ -78,7 +102,8 @@ namespace SportLeagueAPI.GraphQL
                 return dbContext.Players
                 .Include(x => x.Settlement)
                 .Include(x => x.Scores)
-                .OrderByDescending(x => x.Scores.Sum(y => y.Points)).Take(top);
+                .OrderByDescending(x => x.Scores.Sum(y => y.Points))
+                .Take(top);
             });
         }
     }

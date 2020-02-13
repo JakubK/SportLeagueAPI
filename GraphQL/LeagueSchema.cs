@@ -1,5 +1,6 @@
 using GraphQL;
 using GraphQL.Types;
+using SportLeagueAPI.GraphQL.Types;
 
 namespace SportLeagueAPI.GraphQL
 {

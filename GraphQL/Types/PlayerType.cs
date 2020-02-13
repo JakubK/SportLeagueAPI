@@ -20,6 +20,16 @@ namespace SportLeagueAPI.GraphQL.Types
                 type: typeof(IntGraphType),
                 resolve: context => context.Source.Scores.Sum(y => y.Points)
             );
+            Field(
+                name: "scores",
+                type: typeof(ListGraphType<ScoreType>),
+                resolve: context => context.Source.Scores
+            );
+            Field(
+                name: "media",
+                type: typeof(StringGraphType),
+                resolve: context => context.Source.Media.Url
+            );
         }
     }
 }

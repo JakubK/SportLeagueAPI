@@ -12,6 +12,8 @@ namespace SportLeagueAPI.GraphQL.Types
             Field(x => x.Name);
             Field(x => x.Description);
             Field(x => x.Date);
+            Field(x => x.Season);
+            
             Field<ListGraphType<StringGraphType>>("medias", resolve: context => 
             {
                 return context.Source.Medias.Select(x => x.Url);

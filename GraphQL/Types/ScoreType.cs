@@ -9,6 +9,11 @@ namespace SportLeagueAPI.GraphQL.Types
         {
             Field(x => x.Id);
             Field(x => x.Points);
+            Field(
+                name: "event",
+                type: typeof(EventType),
+                resolve: context => context.Source.Event
+            );
         }
     }
 }

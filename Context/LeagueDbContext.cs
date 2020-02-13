@@ -29,8 +29,8 @@ namespace SportLeagueAPI.Context
             );
 
             //Settlement
-            modelBuilder.Entity<Settlement>().HasData(new Settlement{ Id= 1, Name = "Settlement 1", MediaId = 1});
-            modelBuilder.Entity<Settlement>().HasData(new Settlement{ Id= 2, Name = "Settlement 2", MediaId = 2});
+            modelBuilder.Entity<Settlement>().HasData(new Settlement{ Id= 1, Name = "Settlement 1", Description = "CoolSettlement", MediaId = 1});
+            modelBuilder.Entity<Settlement>().HasData(new Settlement{ Id= 2, Name = "Settlement 2", Description = "Not cool", MediaId = 2});
 
             //Events
             modelBuilder.Entity<Event>().HasData(new Event{ Id= 1, Name = "Test Event",Description = "SampleDesc", SettlementId = 1, Date="2019-02-01",Season = 1});
