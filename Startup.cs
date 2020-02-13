@@ -60,28 +60,24 @@ namespace SportLeagueAPI
             services.AddDbContext<LeagueDbContext>(options => 
             {
                 options.UseSqlite(Configuration.GetConnectionString("Database"));
-            });
+            },ServiceLifetime.Scoped);
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(cfg => 
+            .AddJwtBearer(cfg => 
+            {
+                cfg.TokenValidationParameters = new TokenValidationParameters
                 {
-                    cfg.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.Key)),
-                        ValidIssuer = jwtOptions.Issuer,
-                        ValidateAudience = false,
-                        ValidateLifetime = true
-                    };
-                });
-
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.Key)),
+                    ValidIssuer = jwtOptions.Issuer,
+                    ValidateAudience = false,
+                    ValidateLifetime = true
+                };
+            });
                 
             services.AddTransient<IHasher,FileNameHasher>();
             services.AddTransient<IPathsProvider,PathsProvider>();
             services.AddTransient<IMediaUploader,MediaUploader>();
 
-            services.AddSingleton<IDependencyResolver>(s => new FuncDependencyResolver(s.GetRequiredService));
-            services.AddSingleton<IDocumentExecuter,DocumentExecuter>();
-            
             services.AddSingleton<ScoreType>();
             services.AddSingleton<EventType>();
             services.AddSingleton<MediaType>();
@@ -89,12 +85,15 @@ namespace SportLeagueAPI
             services.AddSingleton<PlayerType>();
             services.AddSingleton<SettlementType>();
 
-            services.AddSingleton<LeagueQuery>();
+            services.AddScoped<LeagueQuery>();
+            services.AddSingleton<LeagueSchema>();
+            services.AddSingleton<IDependencyResolver,GraphQLDependencyResolver>();
+            services.AddSingleton<IDocumentExecuter,DocumentExecuter>();
             
-            var sp = services.BuildServiceProvider();
-            services.AddSingleton<ISchema>(new LeagueSchema(new FuncDependencyResolver(type => sp.GetService(type))));
-
-            services.AddGraphQL();
+            services.AddGraphQL(options => 
+            {
+                options.ExposeExceptions = true;
+            });
             services.AddMvc();
         }
 
@@ -116,6 +115,7 @@ namespace SportLeagueAPI
                 FileProvider = new PhysicalFileProvider(pathsProvider.MediaPath),
                 RequestPath = "/media"
             });
+            app.UseGraphQL<LeagueSchema>();
             app.UseGraphiQl("/graphiql","/graphql");
             app.UseMvc();
         }
