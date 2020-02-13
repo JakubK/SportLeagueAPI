@@ -89,7 +89,7 @@ namespace SportLeagueAPI.GraphQL
                     .Include(x => x.Scores)
                     .Include(x => x.Medias)
                     .OrderByDescending(x => x.Scores.Sum(y => y.Points))
-                    .Take(top).ToList();
+                    .Take(top);
                 });
 
             Field<ListGraphType<NewsType>>("newses",resolve: context => dbContext.Newses
@@ -112,7 +112,10 @@ namespace SportLeagueAPI.GraphQL
             }), resolve: context => 
             {
                 var top = context.GetArgument<int>("top");
-                return dbContext.Newses.OrderByDescending(x => x.Date).Take(top).Include(x => x.Media).ToList();
+                return dbContext.Newses
+                .OrderByDescending(x => x.Date)
+                .Take(top)
+                .Include(x => x.Media);
             });
 
             Field<ListGraphType<PlayerType>>("topPlayers", arguments:
@@ -127,6 +130,58 @@ namespace SportLeagueAPI.GraphQL
                 .Include(x => x.Scores)
                 .OrderByDescending(x => x.Scores.Sum(y => y.Points))
                 .Take(top);
+            });
+
+            //Search
+            Field<ListGraphType<PlayerType>>("findPlayers", 
+            arguments: new QueryArguments(new QueryArgument<StringGraphType>
+            {
+                Name = "phrase"
+            }), resolve: context =>
+            {
+                var phrase = context.GetArgument<string>("phrase");
+                return dbContext.Players
+                .Include(x => x.Settlement)
+                .Include(x => x.Scores)
+                .Where(x => x.Name.ToLower().Contains(phrase.ToLower()));
+            });
+
+            Field<ListGraphType<SettlementType>>("findSettlements", 
+            arguments: new QueryArguments(new QueryArgument<StringGraphType>
+            {
+                Name = "phrase"
+            }), resolve: context =>
+            {
+                var phrase = context.GetArgument<string>("phrase");
+                return dbContext.Settlements
+                .Include(x => x.Players).ThenInclude(x => x.Scores).ThenInclude(x => x.Event)
+                .Include(x => x.Media)
+                .Where(x => x.Name.ToLower().Contains(phrase.ToLower()));
+            });
+
+            Field<ListGraphType<EventType>>("findEvents", 
+            arguments: new QueryArguments(new QueryArgument<StringGraphType>
+            {
+                Name = "phrase"
+            }), resolve: context =>
+            {
+                var phrase = context.GetArgument<string>("phrase");
+                return  dbContext.Events
+                .Include(x => x.Scores)
+                .Include(x => x.Medias)
+                .Where(x => x.Name.ToLower().Contains(phrase.ToLower()));
+            });
+
+            Field<ListGraphType<NewsType>>("findNewses", 
+            arguments: new QueryArguments(new QueryArgument<StringGraphType>
+            {
+                Name = "phrase"
+            }), resolve: context =>
+            {
+                var phrase = context.GetArgument<string>("phrase");
+                return dbContext.Newses
+                .Include(x => x.Media)
+                .Where(x => x.Name.ToLower().Contains(phrase.ToLower()));
             });
         }
     }
